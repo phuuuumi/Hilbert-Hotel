@@ -2,7 +2,8 @@
 0638986386
 parawin39228@gmail.com
 Parawin Pitaleemaporn
-> History
+680610695
+> History 3
 2022/12/06 - 2022/12/07
 Deluxe Room
 2000
@@ -16,7 +17,8 @@ Deluxe Room
 0807695456
 phuuuumi@gmail.com
 Phumiphat thanoi
-> History
+1234
+> History 3
 2022/12/06 - 2022/12/07
 Normal Room
 2000
@@ -30,5 +32,18 @@ Deluxe Room
 0123456789
 ggez1234@gmail.com
 KarnKAKMAK
-> History
+Fforall
+> History 0
+--------------------------------------
+0972357485
+pannkitina@gmail.com
+Pann Kitina
+680610692
+> History 0
+--------------------------------------
+0987654321
+Xavier@gmail.com
+carvier
+bester
+> History 0
 --------------------------------------
