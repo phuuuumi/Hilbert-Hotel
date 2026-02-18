@@ -1,5 +1,8 @@
 #include "Welcome.h"
 #include "Register.h"
+#include "LOGIN.h"
+
+user customer;
 
 void clearScreen();
 string Make_Lower(string);
@@ -20,6 +23,7 @@ int main(void){
         else if(user_status=="2" || Make_Lower(user_status)=="login"){
             clearScreen();
             cout << "Your status is Login.\n";
+            login(customer);
             break;
         }
 

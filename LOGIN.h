@@ -7,6 +7,18 @@ class user{
         void getinfo(vector<string>);
 };
 
+void Login_clearScreen();
+
+void Login_clearScreen(){
+    #ifdef _WIN32
+        system("cls");
+    #else
+        // Assume POSIX or other non-Windows
+        system("clear");
+    #endif
+    return;
+}
+
 void user::getinfo(vector<string> input){
     username = input[0];
     useremail = input[1];
@@ -56,13 +68,13 @@ void login(user &consumer){
                     cout << "Hello " << consumer.username << ".";
                     break;
                 }else{
-                    // clearScreen();
+                    Login_clearScreen();
                     cout << "Your password is incorrect. Try again\n";
                 }
             }
             break;
         }
-        // clearScreen();
+        Login_clearScreen();
         cout << "Not found pls try again.\n";
     }
 }
