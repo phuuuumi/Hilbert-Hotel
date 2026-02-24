@@ -1,10 +1,12 @@
 class user{
-    string useremail;
-    string userphone;
-    string userpassword;
+    private:
+        string useremail;
+        string userphone;
+        string userpassword;
     public:
         string username;
         void getinfo(vector<string>);
+        void showuserdata();
 };
 
 void Login_clearScreen();
@@ -65,7 +67,6 @@ void login(user &consumer){
                 if(info[3] == input){
                     consumer.getinfo(info);
                     cout << "Log in success.\n";
-                    cout << "Hello " << consumer.username << ".";
                     break;
                 }else{
                     Login_clearScreen();
@@ -79,3 +80,9 @@ void login(user &consumer){
     }
 }
 
+void user::showuserdata(){
+    cout << "Name : " << username << "\n";
+    cout << "Phone number : " << userphone << "\n";
+    cout << "Email : " << useremail << "\n";
+    cout << "History : " << "coming soon..." << "\n";
+}
