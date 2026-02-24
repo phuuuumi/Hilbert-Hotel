@@ -52,7 +52,7 @@ vector<string> get_userinfo(string input){
 
 void login(user &consumer){
     string input;
-
+    cout << "Your status is Login.\n";
     //collect user phone/email
     while(true){
         cout << "Enter your phone number or email : ";
@@ -66,7 +66,6 @@ void login(user &consumer){
                 getline(cin, input);
                 if(info[3] == input){
                     consumer.getinfo(info);
-                    cout << "Log in success.\n";
                     break;
                 }else{
                     Login_clearScreen();
