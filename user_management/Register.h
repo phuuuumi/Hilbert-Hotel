@@ -135,7 +135,7 @@ bool Register_AddUserData(string name,string phone,string gmail,string password)
     user_file << gmail << "\n";
     user_file << name << "\n";
     user_file << password << "\n";
-    user_file << "> History 0\n";
+    user_file << "0 History\n";
     user_file << "--------------------------------------\n";
     user_file.close();
     result = true;
