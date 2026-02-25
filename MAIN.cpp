@@ -51,6 +51,10 @@ int main(void){
         getline(cin,user_status);
         if(user_status=="1"){
             cout << "coming soon...\n";
+            while(true){
+                if(Make_Lower(user_status) == "yes") break;
+                else getline(cin,user_status);
+            }
         }
 
         //LOG-IN

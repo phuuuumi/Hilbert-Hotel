@@ -5,6 +5,7 @@ class user{
         string userpassword;
     public:
         string username;
+        vector<string> userhistory;
         void getinfo(vector<string>);
         void showuserdata();
 };
@@ -26,11 +27,19 @@ void user::getinfo(vector<string> input){
     useremail = input[1];
     useremail = input[2];
     userpassword = input[3];
+
+    string history = "";
+    for(char a: input[5]){
+        if(a == '+'){
+            userhistory.push_back(history);
+            history = "";
+        }else history = history + a;
+    }
 }
 
 vector<string> get_userinfo(string input){
-    ifstream user_file("user.txt");
-    string line, phone, name, email, password;
+    ifstream user_file("user_management/user.txt");
+    string line, phone, name, email, password, history;
     string user_found = "0";
     while(getline(user_file,line)){
         if(line=="--------------------------------------"){
@@ -40,12 +49,20 @@ vector<string> get_userinfo(string input){
                 user_found = true;
                 getline(user_file,name);
                 getline(user_file, password);
-                return {name, email, phone, password, user_found};
+                getline(user_file, line);
+                history = "";
+                for(int i=0; i<atoi(line.c_str()); i++){
+                    getline(user_file, line);
+                    history = history + line + "+";
+                }
+                user_file.close();
+                return {name, email, phone, password, user_found, history};
             }
         }
     }
     user_file.close();
-    return {"name", "email", "phone", "password", user_found};
+    // str ใส่ไว้ให้user_found อยู่ตำแหน่งตรงใช้เช็คใน if
+    return {"name", "email", "phone", "password", user_found, "history"};
 }
 
 
@@ -66,6 +83,7 @@ void login(user &consumer){
                 getline(cin, input);
                 if(info[3] == input){
                     consumer.getinfo(info);
+                    cout << info[5];
                     break;
                 }else{
                     Login_clearScreen();
@@ -83,5 +101,20 @@ void user::showuserdata(){
     cout << "Name : " << username << "\n";
     cout << "Phone number : " << userphone << "\n";
     cout << "Email : " << useremail << "\n";
-    cout << "History : " << "coming soon..." << "\n";
+    if(userhistory.size() == 0) cout << "History not found!!\n";
+    else {
+        cout << userhistory.size()-1 << " History\n";
+        cout << "------------------------------------------------\n";
+        for(int i=0; i<userhistory.size()-1; i++){
+
+            string text = "";
+            for(char a: userhistory[i]){
+                if(a == ','){
+                    cout << text << "\n";
+                    text = "";
+                }else text += a;
+            }
+            cout << "------------------------------------------------\n";
+        }
+    }       
 }
