@@ -143,7 +143,7 @@ bool Register_AddUserData(string name,string phone,string gmail,string password)
 }
 
 void Register_CollectAllUserData(){
-    ifstream user_file("user.txt");
+    ifstream user_file("user_management/user.txt");
     string line,user_phone,user_gmail;
     while(getline(user_file,line)){
         if(line=="--------------------------------------"){
