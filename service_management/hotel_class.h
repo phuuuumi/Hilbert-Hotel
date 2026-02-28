@@ -6,17 +6,17 @@ class Room;
 
 class RoomInfo{
     private:
-        int room_number;
+        string room_number;
         Room* room_type;
         bool occupied;
         vector<Reservation> bookings;
         public:
-            void setRoom(int num, Room* type, bool occ) {
+            void setRoom(string num, Room* type, bool occ) {
                 room_number = num;
                 room_type = type;
                 occupied = occ;
             }
-            int getNumber() const {
+            string getNumber() const {
                 return room_number;
             }
 

@@ -1,89 +1,62 @@
 #include "hotel_class.h"
+void checkin(); //all function template here.
+void checkout();
+bool isRoomAvailable(string, Date,Date);
+int readfile_pasteinfo(RoomInfo []);
+
+string changetype(string);
 
 string respond;
 Date check_in, check_out;
+void headerinformation();
 
-void checkin();
-void checkout();
 
 int main(){
-    fstream files;
-    files.open("Hotel_Room.txt");
-    if (!files) {
-        cout << "Cannot open file\n";
-        return 0;
-    }
-    Room rooms[5];
+    fstream  files("D:\\CPP\\Hilbert_Hotel\\Hotel_Room.txt"); //read database file.
+    if (!files) cerr << "Error";
+
+    cout << "------------------------" << endl;
+    cout << "WELCOME TO HILBERT HOTEL" << endl; //show in screen
+    cout << "------------------------" << endl;
+
+    checkin();  /*check in and checkout system for customer*/
+    checkout();
+
+    cout << "This is a room that Avaliable" << endl;
+
     RoomInfo info[20];
-    int t_count = 0;
-    string line;
-    while (getline(files, line) && t_count < 5) {
-        stringstream ss(line);
+    int roomCount = readfile_pasteinfo(info);
 
-        string type, guest_s, bedcount_s, bedtype, bath, living_s, price_s;
+    headerinformation();
 
-        getline(ss, type, ',');
-        getline(ss, guest_s, ',');
-        getline(ss, bedcount_s, ',');
-        getline(ss, bedtype, ',');
-        getline(ss, bath, ',');
-        getline(ss, living_s, ',');
-        getline(ss, price_s, ',');
-
-        int guest = stoi(guest_s);
-        int bedcount = stoi(bedcount_s);
-        bool living = (living_s == "Y");
-        double price = stod(price_s);
-
-        map<string,int> bed;
-        bed[bedtype] = bedcount;
-
-        rooms[t_count].set_data(type, guest, bed, bath, living, price);
-
-        t_count++;
+    for (int i = 0; i < roomCount; i++){  //show all room that avaliable from screen.
+        if (info[i].getTypePtr() != nullptr &&
+            isRoomAvailable(info[i].getNumber(), check_in, check_out)){
+            
+            cout <<"|"<< info[i].getNumber() << " | "
+                 << changetype(info[i].getTypePtr()->getType()) << " | "
+                 << info[i].getTypePtr()->getPrice() << " Baths" <<"|"<< endl;
+        }
     }
+    cout << "-------------------------------------------------------" << endl;
 
-        map<string, Room*> typeMap;
-        for(int i = 0; i < t_count; i++){
-            typeMap[rooms[i].getType()] = &rooms[i];
-        }
-
-        int r_count = 0;
-        while (r_count < 20 && getline(files, line)) {
-            if(line.empty()) continue;   
-
-            stringstream ss(line);
-
-            string num_s, type, occ_s;
-
-            getline(ss, num_s, ',');
-            getline(ss, type, ',');
-            getline(ss, occ_s, ',');
-
-            int num = stoi(num_s);
-            bool occ = (occ_s == "YES");
-
-            Room* rtype = typeMap[type];   
-
-            info[r_count].setRoom(num, rtype, occ);
-            r_count++;
-        }
+    
+    string room_choose; //choose room system. 
+    cout << "Which room do you prefer (please enter room number) :";
+    cin >> room_choose;
 
 
-        cout << "------------------------" << endl;
-        cout << "WELCOME TO HILBERT HOTEL" << endl;
-        cout << "------------------------" << endl;
-        int people;
-        string bed_size,bath_size;
-        double price;
+    ofstream dest("D:\\CPP\\Hilbert_Hotel\\reservation.txt",ios::app); //record into history.
+    if(!dest) cerr << "Error";
+    dest << room_choose ; 
+    dest << ',' << check_in.years << ',' << check_in.day << ',' << check_in.month;
+    dest << ',' << check_out.years << ',' << check_out.day << ',' << check_out.month << endl;
+    dest.close();
 
-        while (true){
-            checkin();
-            checkout();
 
-            break;
-        }
-}       
+}
+
+//function that manage check-in system.
 void checkin(){
     cout << "\nPlease select date you want to check in" << endl;
     cout << "Years (in A.D) : ";
@@ -151,6 +124,7 @@ void checkin(){
     }
  }
 
+//function that manage check-out system.
 void checkout(){
     cout << "\nPlease select date you want to check out" << endl;
     cout << "Years (in A.D) : ";
@@ -229,3 +203,145 @@ void checkout(){
         checkout(); // Restart the check-in process if input is invalid
     }
  }
+
+ //function to check if that room are avaliable for current customer. 
+ bool isRoomAvailable(string roomNumber, Date new_in, Date new_out){
+    fstream file("D:/CPP/Hilbert_Hotel/reservation.txt");
+    if (!file) {
+        return true;
+    } //can choose if nothing on files.
+
+    string line;
+    while (getline(file, line)){
+        stringstream ss(line);
+
+        string num_s, y1,m1,d1,y2,m2,d2;
+
+        getline(ss, num_s, ',');
+        getline(ss, y1, ',');
+        getline(ss, m1, ',');
+        getline(ss, d1, ',');
+        getline(ss, y2, ',');
+        getline(ss, m2, ',');
+        getline(ss, d2, ',');
+
+        if (num_s != roomNumber) continue; //if not the same room then can check another line.
+        
+        if (line.empty()) continue;
+
+        Date old_in  = {stoi(d1), stoi(m1), stoi(y1)}; //the old customer check in and out.
+        Date old_out = {stoi(d2), stoi(m2), stoi(y2)};
+
+         bool overlap =
+            !( isBefore(new_out, old_in) ||
+               isBefore(old_out, new_in) );
+
+        if (overlap){
+            file.close();
+            return false;
+        }
+    }
+
+    file.close();
+    return true;
+}
+
+//function to show room detail.
+string changetype(string type){
+    if (type == "STR")  return "Standard Room (2 person limits)   ";
+    if (type == "DR")   return "Deluxe Room (2 person limits)     ";
+    if (type == "TWR")  return "Twin Room (4 person limits)       ";
+    if (type == "DTWR") return "Deluxe Twin Room (4 person limits)";
+    if (type == "SUR")  return "Suite Room (2 person limits)      ";
+                        return "No Room type                      ";
+
+}
+
+//function to show header of information.
+void headerinformation(){
+    cout << " _____________________________________________________" << "\n";
+    cout << "|No. |Type name                           | Price     |" << "\n";
+    cout << "-------------------------------------------------------" << "\n";
+}
+
+//function to read files from database.
+int readfile_pasteinfo(RoomInfo info[]){
+    fstream  files("D:\\CPP\\Hilbert_Hotel\\Hotel_Room.txt"); 
+    if (!files) cerr << "Error";
+    static Room rooms[5];
+    int t_count = 0;
+    string line;
+    while (getline(files, line) && t_count < 5) {
+        stringstream ss(line);
+
+        string type, guest_s, bedcount_s, bedtype, bath, living_s, price_s;
+
+        getline(ss, type, ',');
+        getline(ss, guest_s, ',');
+        getline(ss, bedcount_s, ',');
+        getline(ss, bedtype, ',');
+        getline(ss, bath, ',');
+        getline(ss, living_s, ',');
+        getline(ss, price_s, ',');
+
+        int guest = stoi(guest_s);
+        int bedcount = stoi(bedcount_s);
+        bool living = (living_s == "Y");
+        double price = stod(price_s);
+
+        map<string,int> bed;
+        bed[bedtype] = bedcount;
+
+        rooms[t_count].set_data(type, guest, bed, bath, living, price);
+
+        t_count++;
+    }
+
+        map<string, Room*> typeMap;
+        for(int i = 0; i < t_count; i++){
+            typeMap[rooms[i].getType()] = &rooms[i];
+        }
+
+        int r_count = 0;
+        while (r_count < 20 && getline(files, line)) {
+            if(line.empty()) continue;   
+
+            stringstream ss(line);
+
+            string num_s, type, occ_s,num;
+
+            getline(ss, num_s, ',');
+            getline(ss, type, ',');
+            getline(ss, occ_s, ',');
+
+            
+            bool occ = (occ_s == "YES");
+
+            Room* rtype = typeMap[type];
+            info[r_count].setRoom(num_s, rtype, occ);
+            r_count ++;
+            
+        }
+        files.close();
+        return r_count;
+
+}
+        
+
+
+        
+
+
+        
+
+        
+
+    
+
+
+
+
+
+
+
+

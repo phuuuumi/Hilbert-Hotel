@@ -23,3 +23,9 @@ int daysInMonth(int month, int year) {
 
     return 31;
 }
+
+bool isBefore(Date a, Date b){
+    if (a.years != b.years) return a.years < b.years;
+    if (a.month != b.month) return a.month < b.month;
+    return a.day <= b.day;
+}
