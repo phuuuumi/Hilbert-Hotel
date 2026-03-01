@@ -15,7 +15,8 @@ int main(void){
     cout << "-Welcome to Hilbert-Hotel-\n";
     cout << "1.Register\n";
     cout << "2.Login\n";
-    cout << "Please choose your option(1/2) : ";
+    cout << "3.Exit\n";
+    cout << "Please choose your option(1/2/3) : ";
     string user_status;
     getline(cin,user_status);
 
@@ -33,10 +34,16 @@ int main(void){
             login(customer);
             break;
         }
+        else if(user_status=="3" || Make_Lower(user_status)=="exit"){
+            cout << "Exiting the program." << endl;
+            return 0;
+        }
+        else{
 
         cout << "ERROR . . . Your Answer is not Correct\n";
-        cout << "Please choose your option(1/2) : ";
+        cout << "Please choose your option(1/2/3) : ";
         getline(cin,user_status);
+        }  
     }
 
     // Services Section
@@ -48,7 +55,8 @@ int main(void){
     while(true){
         cout << "1.Check in and Check out\n";
         cout << "2.Show user data and history.\n";
-        cout << "Please choose your option(1/2) : ";
+        cout << "3.Exit\n";
+        cout << "Please choose your option(1/2/3) : ";
         getline(cin,user_status);
         if(user_status=="1"){
             /*cout << "coming soon...\n";
@@ -69,6 +77,12 @@ int main(void){
                 return 0; // Exit the program if user wants to exit
             }
 
+            clearScreen();
+
+            cout << "Your check-in date is " << check_in.day << "/" << check_in.month << "/" << check_in.years << endl;
+            cout << "Your check-out date is " << check_out.day << "/" << check_out.month << "/" << check_out.years << endl;
+            cout << endl;
+
             cout << "This is a room that Avaliable" << endl;
 
             RoomInfo info[20];
@@ -88,23 +102,57 @@ int main(void){
 
     choose_room(); //for user to input room.
 
+    cout << "1.Go back\n";
+    cout << "2.Exit\n";
+    cout << "Do you want to go back? (1/2) : ";
+    getline(cin,user_status);
+    while(true){
+        if(Make_Lower(user_status) == "1") break;
+        else if(Make_Lower(user_status) == "2") {
+            user_status = "3";
+            cout << "Exiting the program." << endl;
+            return 0;
+        }
+        else {
+            cout << "ERROR . . . Your Answer is not Correct\n";
+            cout << "Please choose your option(1/2) : ";
+            getline(cin,user_status);
+        }
+    }
+
         }
 
         //LOG-IN
         else if(user_status=="2"){
             clearScreen();
             customer.showuserdata();
-            cout << "Do you want to go back? (Yes) : ";
+            cout << "1.Go back\n";
+            cout << "2.Exit\n";
+            cout << "Do you want to go back? (1/2) : ";
             getline(cin,user_status);
             while(true){
-                if(Make_Lower(user_status) == "yes") break;
-                else getline(cin,user_status);
+                if(Make_Lower(user_status) == "1") break;
+                else if(Make_Lower(user_status) == "2") {
+                    user_status = "3";
+                    cout << "Exiting the program." << endl;
+                    return 0;
+                }
+                else {
+                    cout << "ERROR . . . Your Answer is not Correct\n";
+                    cout << "Please choose your option(1/2) : ";
+                    getline(cin,user_status);
+                }
             }
+        }
+
+        else if(user_status=="3" || Make_Lower(user_status)=="exit"){
+            cout << "Exiting the program." << endl;
+            return 0;
         }
 
         else{
             cout << "ERROR . . . Your Answer is not Correct\n";
-            cout << "Please choose your option(1/2) : ";
+            cout << "Please choose your option(1/2/3) : ";
             getline(cin,user_status);      
         }
         clearScreen();
