@@ -55,7 +55,7 @@ int main(void){
                 if(Make_Lower(user_status) == "yes") break;
                 else getline(cin,user_status);
             }*/
-           fstream  files("D:\\CPP\\Hilbert_Hotel\\Hotel_Room.txt"); //read database file.
+           fstream  files("service_management/Hotel_Room.txt"); //read database file.
             if (!files) cerr << "Error";
 
             cout << "------------------------" << endl;
@@ -85,13 +85,7 @@ int main(void){
     cout << "Which room do you prefer (please enter room number) :";
     cin >> room_choose;
 
-
-    ofstream dest("D:\\CPP\\Hilbert_Hotel\\reservation.txt",ios::app); //record into history.
-    if(!dest) cerr << "Error";
-    dest << room_choose ; 
-    dest << ',' << check_in.years << ',' << check_in.day << ',' << check_in.month;
-    dest << ',' << check_out.years << ',' << check_out.day << ',' << check_out.month << endl;
-    dest.close();
+    choose_room(); //for user to input room.
 
         }
 
