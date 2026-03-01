@@ -427,7 +427,6 @@ void choose_room(){
     }
 
 }
-        
 
 
         
