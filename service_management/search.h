@@ -3,6 +3,10 @@
 #include <sstream>
 #include <string>
 
+void checkin(bool&); //all function template here.
+void checkout(bool&);
+
+
 using namespace std;
 
 struct Date{
@@ -39,6 +43,7 @@ bool isBefore(Date a, Date b){
 
 //function to check if that room are avaliable for current customer. 
  bool isRoomAvailable(string roomNumber, Date new_in, Date new_out){
+
     fstream file("reservation.txt");
     if (!file) {
         return true;
@@ -82,150 +87,225 @@ string changetype(string);
 string respond;
 Date check_in, check_out;
 //function that manage check-in system.
-void checkin(){
+void checkin(bool& exit){
+    if (exit) {
+        cout << "Exiting check-in process." << endl;
+        return; // Exit the function if user wants to exit
+    }
+    string input;
     cout << "\nPlease select date you want to check in" << endl;
     cout << "Years (in A.D) : ";
-    cin >> check_in.years;
-    if (cin.fail()) {
+    cin >> input;
+    if (input == "Exit") {
+            cout << "Exiting the process." << endl;
+            exit = true;
+            return; // Exit the function if user wants to exit
+        }
+    
+    try {
+        check_in.years = stoi(input); // Convert input to integer for year
+    } catch (const exception&) {
         cout << "Invalid input for year. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cin.ignore(1000, '\n'); // Discard invalid input
         check_in.years = 0; // Reset year to avoid confusion
-        checkin(); // Restart the check-in process
+        checkin(exit); // Restart the check-in process
         return;
     }
+    input.clear(); // Clear the input string for the next input
     if (check_in.years < 2026) {
         cout << "Check-in year cannot be in the past. Please re-enter." << endl;
         check_in.years = 0; // Reset year to avoid confusion
-        checkin(); // Restart the check-in process
+        checkin(exit); // Restart the check-in process
         return;
     }
     cout << "Month (1-12) : ";
-    cin >> check_in.month;
-    if (cin.fail()) {
+    cin >> input;
+    if (input == "Exit") {
+            cout << "Exiting check-in process." << endl;
+            exit = true;
+            return; // Exit the function if user wants to exit
+        }
+    try {
+        check_in.month = stoi(input); // Convert input to integer for month
+    } catch (const exception&) {
         cout << "Invalid input for month. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cin.ignore(1000, '\n'); // Discard invalid input
         check_in.month = 0; // Reset month to avoid confusion
-        checkin(); // Restart the check-in process
+        checkin(exit); // Restart the check-in process
         return;
     }
+    input.clear(); // Clear the input string for the next input
     if (check_in.month < 1 || check_in.month > 12) {
         cout << "Invalid month. Please enter a value between 1 and 12." << endl;
         check_in.month = 0; // Reset month to avoid confusion
-        checkin(); // Restart the check-in process
+        checkin(exit); // Restart the check-in process
         return;
     }
 
     cout << "Date (1-" << daysInMonth(check_in.month, check_in.years) << ") : ";
-    cin >> check_in.day;
-    if (cin.fail()) {
+    cin >> input;
+    if (input == "Exit") {
+            cout << "Exiting the process." << endl;
+            exit = true;
+            return; // Exit the function if user wants to exit
+        }
+    try {
+        check_in.day = stoi(input); // Convert input to integer for day
+    } catch (const exception&) {
         cout << "Invalid input for day. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cin.ignore(1000, '\n'); // Discard invalid input
         check_in.day = 0; // Reset day to avoid confusion
-        checkin(); // Restart the check-in process
+        checkin(exit); // Restart the check-in process
         return;
     }
+    input.clear(); // Clear the input string for the next input
     if (check_in.day < 1 || check_in.day > daysInMonth(check_in.month, check_in.years)) {
         cout << "Invalid day for the given month and year. Please re-enter." << endl;
         check_in.day = 0; // Reset day to avoid confusion
-        checkin(); // Restart the check-in process
+        checkin(exit); // Restart the check-in process
         return;
     }
     cout << "You want to check in at "<< check_in.day << "/" << check_in.month << "/" << check_in.years << endl;       
     
     cout << "Do you want to confirm? (Y/N) :";
-    cin >> respond;
-    if (respond == "N" || respond == "n") {
+    cin >> input;
+    if (cin.fail()) {
+        cout << "Invalid input. Please enter 'Y' for yes or 'N' for no." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); // Discard invalid input
         check_in = {0, 0, 0}; // Reset check-in date to avoid confusion
-        checkin(); // Restart the check-in process
-    } else if (respond == "Y" || respond == "y") {
+        checkin(exit); // Restart the check-in process
+        return;
+    }
+    if (input == "N" || input == "n") {
+        check_in = {0, 0, 0}; // Reset check-in date to avoid confusion
+        checkin(exit); // Restart the check-in process
+    } else if (input == "Y" || input == "y") {
         cout << "Check-in date confirmed: " << check_in.day << "/" << check_in.month << "/" << check_in.years << endl;
         return; // Exit the loop after successful confirmation
     } else {
         cout << "Invalid input. Please enter 'Y' for yes or 'N' for no." << endl;
-        checkin(); // Restart the check-in process if input is invalid
+        checkin(exit); // Restart the check-in process if input is invalid
     }
  }
 
 //function that manage check-out system.
-void checkout(){
+void checkout(bool& exit){
+    string input;
+    if (exit) {
+        cout << "Exiting check-out process." << endl;
+        return; // Exit the function if user wants to exit
+    }
     cout << "\nPlease select date you want to check out" << endl;
     cout << "Years (in A.D) : ";
-    cin >> check_out.years;
-    if (cin.fail()) {
+    cin >> input;
+    if (input == "Exit") {
+            cout << "Exiting the process." << endl;
+            exit = true;
+            return; // Exit the function if user wants to exit
+        }
+    try {
+        check_out.years = stoi(input); // Convert input to integer for year
+    } catch (const exception&) {
         cout << "Invalid input for year. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cin.ignore(1000, '\n'); // Discard invalid input
         check_out.years = 0; // Reset year to avoid confusion
-        checkout(); // Restart the check-out process
+        checkout(exit); // Restart the check-out process
         return;
     }
+    input.clear(); // Clear the input string for the next input
     if (check_out.years < check_in.years) {
         cout << "Check-out year cannot be before check-in year. Please re-enter." << endl;
         check_out.years = 0; // Reset year to avoid confusion
-        checkout(); // Restart the check-out process
+        checkout(exit); // Restart the check-out process
         return;
     }
     cout << "Month (1-12) : ";
-    cin >> check_out.month;
-    if (cin.fail()) {
+    cin >> input;
+    if (input == "Exit") {
+        cout << "Exiting the process." << endl;
+        exit = true;
+        return; // Exit the function if user wants to exit
+    }
+    try {
+        check_out.month = stoi(input); // Convert input to integer for month
+    } catch (const exception&) {
         cout << "Invalid input for month. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cin.ignore(1000, '\n'); // Discard invalid input
         check_out.month = 0; // Reset month to avoid confusion
-        checkout(); // Restart the check-out process
+        checkout(exit); // Restart the check-out process
         return;
     }
+    input.clear(); // Clear the input string for the next input
     if (check_out.month < 1 || check_out.month > 12) {
         cout << "Invalid month. Please enter a value between 1 and 12." << endl;
         check_out.month = 0; // Reset month to avoid confusion
-        checkout(); // Restart the check-out process
+        checkout(exit); // Restart the check-out process
         return;
     }
 
     if (check_out.years == check_in.years && check_out.month < check_in.month) {
         cout << "Check-out month cannot be before check-in month in the same year. Please re-enter." << endl;
         check_out.month = 0; // Reset month to avoid confusion
-        checkout(); // Restart the check-out process
+        checkout(exit); // Restart the check-out process
         return;
     }
     cout << "Date (1-" << daysInMonth(check_out.month, check_out.years) << ") : ";
-    cin >> check_out.day;
-    if (cin.fail()) {
+    cin >> input;
+    if (input == "Exit") {
+        cout << "Exiting the process." << endl;
+        exit = true;
+        return; // Exit the function if user wants to exit
+    }
+    try {
+        check_out.day = stoi(input); // Convert input to integer for day
+    } catch (const exception&) {
         cout << "Invalid input for day. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cin.ignore(1000, '\n'); // Discard invalid input
         check_out.day = 0; // Reset day to avoid confusion
-        checkout(); // Restart the check-out process
+        checkout(exit); // Restart the check-out process
         return;
     }
+    input.clear(); // Clear the input string for the next input
     if (check_out.day < 1 || check_out.day > daysInMonth(check_out.month, check_out.years)) {
         cout << "Invalid day for the given month and year. Please re-enter." << endl;
         check_out.day = 0; // Reset day to avoid confusion
-        checkout(); // Restart the check-out process
+        checkout(exit); // Restart the check-out process
         return;
     }
 
     if (check_out.years == check_in.years && check_out.month == check_in.month && check_out.day <= check_in.day) {
         cout << "Check-out date cannot be before or the same as check-in date in the same month and year. Please re-enter." << endl;
         check_out.day = 0; // Reset day to avoid confusion
-        checkout(); // Restart the check-out process
+        checkout(exit); // Restart the check-out process
         return;
     }
     cout << "You want to check out at "<< check_out.day << "/" << check_out.month << "/" << check_out.years << endl;
     cout << "Do you want to confirm? (Y/N) :";
-    cin >> respond;
-    if (respond == "N" || respond == "n") {
+    cin >> input;
+    if (cin.fail()) {
+        cout << "Invalid input. Please enter 'Y' for yes or 'N' for no." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); // Discard invalid input
         check_out = {0, 0, 0}; // Reset check-out date to avoid confusion
-        checkout(); // Restart the check-out process
-    } else if (respond == "Y" || respond == "y"){
+        checkout(exit); // Restart the check-out process
+        return;
+    }
+    if (input == "N" || input == "n") {
+        check_out = {0, 0, 0}; // Reset check-out date to avoid confusion
+        checkout(exit); // Restart the check-out process
+    } else if (input == "Y" || input == "y"){
         cout << "Check-out date confirmed: " << check_out.day << "/" << check_out.month << "/" << check_out.years << endl;
         return; // Exit the loop after successful confirmation
     } else {
         cout << "Invalid input. Please enter 'Y' for yes or 'N' for no." << endl;
-        checkout(); // Restart the check-in process if input is invalid
+        checkout(exit); // Restart the check-out process if input is invalid
     }
  }
 
@@ -294,7 +374,7 @@ void Room::set_data(string r,int g,map <string,int> b,string bath,bool l,double 
 }
 
 int readfile_pasteinfo(RoomInfo info[]){
-    fstream  files("Hotel_Room.txt"); 
+    fstream  files("service_management/Hotel_Room.txt"); 
     if (!files) cerr << "Error";
     static Room rooms[5];
     int t_count = 0;
@@ -394,7 +474,7 @@ void choose_room(){
         cin.ignore(1000, '\n'); 
         choose_room();
     }else{
-        ofstream dest("reservation.txt",ios::app); //record into history.
+        ofstream dest("service_management/reservation.txt",ios::app); //record into history.
         if(!dest) cerr << "Error";
         dest << room_choose ; 
         dest << ',' << check_in.years << ',' << check_in.day << ',' << check_in.month;

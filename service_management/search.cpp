@@ -1,7 +1,8 @@
 #include "hotel_class.h"
-void checkin(); //all function template here.
-void checkout();
+void checkin(bool&); //all function template here.
+void checkout(bool&);
 bool isRoomAvailable(string, Date,Date);
+void choose_room();
 int readfile_pasteinfo(RoomInfo []);
 
 string changetype(string);
@@ -12,7 +13,7 @@ void headerinformation();
 
 
 int main(){
-    fstream  files("D:\\CPP\\Hilbert_Hotel\\Hotel_Room.txt"); //read database file.
+    fstream  files("Hotel_Room.txt"); //read database file.
     if (!files) cerr << "Error";
 
     cout << "------------------------" << endl;
@@ -44,17 +45,7 @@ int main(){
     }
     cout << "-------------------------------------------------------" << endl;
 
-    string room_choose; //choose room system. 
-    cout << "Which room do you prefer (please enter room number) :";
-    cin >> room_choose;
-
-
-    ofstream dest("reservation.txt",ios::app); //record into history.
-    if(!dest) cerr << "Error";
-    dest << room_choose ; 
-    dest << ',' << check_in.years << ',' << check_in.day << ',' << check_in.month;
-    dest << ',' << check_out.years << ',' << check_out.day << ',' << check_out.month << endl;
-    dest.close();
+    choose_room(); //choose room system.
 
 
 }
@@ -427,7 +418,7 @@ void choose_room(){
         cin.ignore(1000, '\n'); 
         choose_room();
     }else{
-        ofstream dest("D:\\CPP\\Hilbert_Hotel\\reservation.txt",ios::app); //record into history.
+        ofstream dest("reservation.txt",ios::app); //record into history.
         if(!dest) cerr << "Error";
         dest << room_choose ; 
         dest << ',' << check_in.years << ',' << check_in.day << ',' << check_in.month;

@@ -38,7 +38,7 @@ void user::getinfo(vector<string> input){
 }
 
 vector<string> get_userinfo(string input){
-    ifstream user_file("user_management/user.txt");
+    ifstream user_file("user.txt");
     if (!user_file){
     cout << "Cannot open user.txt\n";
     return {"", "", "", "", "0", ""};

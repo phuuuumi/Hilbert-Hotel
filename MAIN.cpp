@@ -1,6 +1,6 @@
 #include "user_management/Register.h"
 #include "user_management/LOGIN.h"
-
+#include "service_management/search.h"
 
 
 user customer;
@@ -9,6 +9,7 @@ void clearScreen();
 string Make_Lower(string);
 
 int main(void){
+    bool exit = false;
     // Welcome_hotel_starter();
 
     cout << "-Welcome to Hilbert-Hotel-\n";
@@ -55,15 +56,18 @@ int main(void){
                 if(Make_Lower(user_status) == "yes") break;
                 else getline(cin,user_status);
             }*/
-           fstream  files("service_management/Hotel_Room.txt"); //read database file.
-            if (!files) cerr << "Error";
-
+           
             cout << "------------------------" << endl;
             cout << "WELCOME TO HILBERT HOTEL" << endl; //show in screen
             cout << "------------------------" << endl;
 
-            checkin();  /*check in and checkout system for customer*/
-            checkout();
+            checkin(exit);  /*check in and checkout system for customer*/
+            checkout(exit);
+
+            if (exit) {
+                cout << "Exiting the program." << endl;
+                return 0; // Exit the program if user wants to exit
+            }
 
             cout << "This is a room that Avaliable" << endl;
 
@@ -81,9 +85,6 @@ int main(void){
                 }
             }
     cout << "-------------------------------------------------------" << endl;
-    string room_choose; //choose room system. 
-    cout << "Which room do you prefer (please enter room number) :";
-    cin >> room_choose;
 
     choose_room(); //for user to input room.
 
