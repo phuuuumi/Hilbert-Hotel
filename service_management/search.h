@@ -33,7 +33,7 @@ bool isBefore(Date a, Date b){
 
 //function to check if that room are avaliable for current customer. 
  bool isRoomAvailable(string roomNumber, Date new_in, Date new_out){
-    fstream file("D:/CPP/Hilbert_Hotel/reservation.txt");
+    fstream file("reservation.txt");
     if (!file) {
         return true;
     } //can choose if nothing on files.
@@ -288,7 +288,7 @@ void Room::set_data(string r,int g,map <string,int> b,string bath,bool l,double 
 }
 
 int readfile_pasteinfo(RoomInfo info[]){
-    fstream  files("D:\\CPP\\Hilbert_Hotel\\Hotel_Room.txt"); 
+    fstream  files("Hotel_Room.txt"); 
     if (!files) cerr << "Error";
     static Room rooms[5];
     int t_count = 0;
@@ -365,4 +365,35 @@ void headerinformation(){
     cout << " _____________________________________________________" << "\n";
     cout << "|No. |Type name                           | Price     |" << "\n";
     cout << "-------------------------------------------------------" << "\n";
+}
+
+void choose_room(){
+    string room_choose; //choose room system. 
+    cout << "Which room do you prefer (please enter room number) :";
+    cin >> room_choose;
+    if (cin.fail()){
+        cout << "Invalid input . Please enter valid room number." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); 
+        choose_room();
+    }else if(room_choose.size() > 3){
+        cout << "Invalid input . Please enter valid room number." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); 
+        choose_room();
+
+    }else if(stoi(room_choose) < 1 or stoi(room_choose) > 20){
+        cout << "Invalid input . Please enter valid room number." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); 
+        choose_room();
+    }else{
+        ofstream dest("reservation.txt",ios::app); //record into history.
+        if(!dest) cerr << "Error";
+        dest << room_choose ; 
+        dest << ',' << check_in.years << ',' << check_in.day << ',' << check_in.month;
+        dest << ',' << check_out.years << ',' << check_out.day << ',' << check_out.month << endl;
+        dest.close();
+    }
+
 }
