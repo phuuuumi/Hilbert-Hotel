@@ -101,10 +101,10 @@ int main(void){
     cout << "-------------------------------------------------------" << endl;
 
     choose_room(); //for user to input room.
+    cin.get();
 
     cout << "1.Go back\n";
     cout << "2.Exit\n";
-    user_status = "";
     cout << "Do you want to go back? (1/2) : ";
     getline(cin,user_status);
     while(true){
@@ -129,7 +129,6 @@ int main(void){
             customer.showuserdata();
             cout << "1.Go back\n";
             cout << "2.Exit\n";
-            user_status="";
             cout << "Do you want to go back? (1/2) : ";
             getline(cin,user_status);
             while(true){
