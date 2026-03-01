@@ -6,7 +6,6 @@ int readfile_pasteinfo(RoomInfo []);
 
 string changetype(string);
 
-string respond;
 Date check_in, check_out;
 void headerinformation();
 
@@ -19,8 +18,9 @@ int main(){
     cout << "WELCOME TO HILBERT HOTEL" << endl; //show in screen
     cout << "------------------------" << endl;
 
-    checkin();  /*check in and checkout system for customer*/
-    checkout();
+    bool exit = false;
+    checkin(exit);  /*check in and checkout system for customer*/
+    checkout(exit);
 
     cout << "This is a room that Avaliable" << endl;
 
