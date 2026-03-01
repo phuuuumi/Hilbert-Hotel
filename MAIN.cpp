@@ -104,6 +104,7 @@ int main(void){
 
     cout << "1.Go back\n";
     cout << "2.Exit\n";
+    user_status = "";
     cout << "Do you want to go back? (1/2) : ";
     getline(cin,user_status);
     while(true){
@@ -115,7 +116,7 @@ int main(void){
         }
         else {
             cout << "ERROR . . . Your Answer is not Correct\n";
-            cout << "Please choose your option(1/2) : ";
+            cout << "Do you want to go back? (1/2) : ";
             getline(cin,user_status);
         }
     }
@@ -128,6 +129,7 @@ int main(void){
             customer.showuserdata();
             cout << "1.Go back\n";
             cout << "2.Exit\n";
+            user_status="";
             cout << "Do you want to go back? (1/2) : ";
             getline(cin,user_status);
             while(true){
@@ -139,7 +141,7 @@ int main(void){
                 }
                 else {
                     cout << "ERROR . . . Your Answer is not Correct\n";
-                    cout << "Please choose your option(1/2) : ";
+                    cout << "Do you want to go back? (1/2) : ";
                     getline(cin,user_status);
                 }
             }
