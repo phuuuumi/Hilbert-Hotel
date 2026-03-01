@@ -39,6 +39,10 @@ void user::getinfo(vector<string> input){
 
 vector<string> get_userinfo(string input){
     ifstream user_file("user_management/user.txt");
+    if (!user_file){
+    cout << "Cannot open user.txt\n";
+    return {"", "", "", "", "0", ""};
+    }
     string line, phone, name, email, password, history;
     string user_found = "0";
     while(getline(user_file,line)){

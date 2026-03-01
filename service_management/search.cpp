@@ -1,6 +1,6 @@
 #include "hotel_class.h"
-void checkin(bool&);
-void checkout(bool&);
+void checkin(); //all function template here.
+void checkout();
 bool isRoomAvailable(string, Date,Date);
 int readfile_pasteinfo(RoomInfo []);
 
@@ -12,7 +12,7 @@ void headerinformation();
 
 
 int main(){
-        fstream  files("Hotel_Room.txt"); //read database file.
+    fstream  files("D:\\CPP\\Hilbert_Hotel\\Hotel_Room.txt"); //read database file.
     if (!files) cerr << "Error";
 
     cout << "------------------------" << endl;
@@ -402,6 +402,38 @@ int readfile_pasteinfo(RoomInfo info[]){
         }
         files.close();
         return r_count;
+
+}
+
+
+void choose_room(){
+    string room_choose; //choose room system. 
+    cout << "Which room do you prefer (please enter room number) :";
+    cin >> room_choose;
+    if (cin.fail()){
+        cout << "Invalid input . Please enter valid room number." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); 
+        choose_room();
+    }else if(room_choose.size() > 3){
+        cout << "Invalid input . Please enter valid room number." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); 
+        choose_room();
+
+    }else if(stoi(room_choose) < 1 or stoi(room_choose) > 20){
+        cout << "Invalid input . Please enter valid room number." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); 
+        choose_room();
+    }else{
+        ofstream dest("D:\\CPP\\Hilbert_Hotel\\reservation.txt",ios::app); //record into history.
+        if(!dest) cerr << "Error";
+        dest << room_choose ; 
+        dest << ',' << check_in.years << ',' << check_in.day << ',' << check_in.month;
+        dest << ',' << check_out.years << ',' << check_out.day << ',' << check_out.month << endl;
+        dest.close();
+    }
 
 }
         
