@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 
-void checkin(bool&); //all function template here.
+void checkin(bool&);
 void checkout(bool&);
 
 
@@ -84,7 +84,6 @@ bool isBefore(Date a, Date b){
     return true;
 }
 string changetype(string);
-string respond;
 Date check_in, check_out;
 //function that manage check-in system.
 void checkin(bool& exit){
@@ -481,5 +480,6 @@ void choose_room(){
         dest << ',' << check_out.years << ',' << check_out.day << ',' << check_out.month << endl;
         dest.close();
     }
+    return;
 
 }
