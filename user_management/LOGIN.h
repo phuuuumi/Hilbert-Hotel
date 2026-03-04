@@ -25,7 +25,7 @@ void Login_clearScreen(){
 void user::getinfo(vector<string> input){
     username = input[0];
     useremail = input[1];
-    useremail = input[2];
+    userphone = input[2];
     userpassword = input[3];
 
     string history = "";
@@ -87,7 +87,6 @@ void login(user &consumer){
                 getline(cin, input);
                 if(info[3] == input){
                     consumer.getinfo(info);
-                    cout << info[5];
                     break;
                 }else{
                     Login_clearScreen();
