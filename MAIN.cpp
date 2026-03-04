@@ -59,17 +59,14 @@ int main(void){
         cout << "Please choose your option(1/2/3) : ";
         getline(cin,user_status);
         if(user_status=="1"){
-            /*cout << "coming soon...\n";
-            while(true){
-                if(Make_Lower(user_status) == "yes") break;
-                else getline(cin,user_status);
-            }*/
-           
+            clearScreen();
             cout << "------------------------" << endl;
             cout << "WELCOME TO HILBERT HOTEL" << endl; //show in screen
             cout << "------------------------" << endl;
 
             checkin(exit);  /*check in and checkout system for customer*/
+            clearScreen();
+            cout << "Your check-in date is " << check_in.day << "/" << check_in.month << "/" << check_in.years << endl;
             checkout(exit);
 
             if (exit) {
