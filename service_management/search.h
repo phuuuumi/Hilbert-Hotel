@@ -38,13 +38,13 @@ int daysInMonth(int month, int year) {
 bool isBefore(Date a, Date b){
     if (a.years != b.years) return a.years < b.years;
     if (a.month != b.month) return a.month < b.month;
-    return a.day <= b.day;
+    return a.day < b.day;
 }
 
 //function to check if that room are avaliable for current customer. 
  bool isRoomAvailable(string roomNumber, Date new_in, Date new_out){
 
-    fstream file("reservation.txt");
+    fstream file("service_management/reservation.txt");
     if (!file) {
         return true;
     } //can choose if nothing on files.
@@ -53,15 +53,15 @@ bool isBefore(Date a, Date b){
     while (getline(file, line)){
         stringstream ss(line);
 
-        string num_s, y1,m1,d1,y2,m2,d2;
+        string num_s, d1,m1,y1,d2,m2,y2;
 
         getline(ss, num_s, ',');
-        getline(ss, y1, ',');
-        getline(ss, m1, ',');
         getline(ss, d1, ',');
-        getline(ss, y2, ',');
-        getline(ss, m2, ',');
+        getline(ss, m1, ',');
+        getline(ss, y1, ',');
         getline(ss, d2, ',');
+        getline(ss, m2, ',');
+        getline(ss, y2, ',');
 
         if (num_s != roomNumber) continue; //if not the same room then can check another line.
         
@@ -71,8 +71,8 @@ bool isBefore(Date a, Date b){
         Date old_out = {stoi(d2), stoi(m2), stoi(y2)};
 
          bool overlap =
-            !( isBefore(new_out, old_in) ||
-               isBefore(old_out, new_in) );
+            isBefore(new_in, old_out) &&
+            isBefore(old_in, new_out);
 
         if (overlap){
             file.close();
@@ -476,8 +476,8 @@ void choose_room(){
         ofstream dest("service_management/reservation.txt",ios::app); //record into history.
         if(!dest) cerr << "Error";
         dest << room_choose ; 
-        dest << ',' << check_in.years << ',' << check_in.day << ',' << check_in.month;
-        dest << ',' << check_out.years << ',' << check_out.day << ',' << check_out.month << endl;
+        dest << ',' << check_in.day << ',' << check_in.month << ',' << check_in.years;
+        dest << ',' << check_out.day << ',' << check_out.month << ',' << check_out.years << endl;
         dest.close();
     }
     return;

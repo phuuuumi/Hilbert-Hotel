@@ -101,6 +101,14 @@ int main(void){
 
             RoomInfo info[20];
             int roomCount = readfile_pasteinfo(info);
+            int roomleft=0;
+            for (int i = 0; i < roomCount; i++){  
+                if (info[i].getTypePtr() != nullptr &&
+                    isRoomAvailable(info[i].getNumber(), check_in, check_out)){
+                     roomleft++;
+                }
+            }
+
              headerinformation();
 
             for (int i = 0; i < roomCount; i++){  //show all room that avaliable from screen.
@@ -108,8 +116,14 @@ int main(void){
                     isRoomAvailable(info[i].getNumber(), check_in, check_out)){
             
                     cout <<"|"<< info[i].getNumber() << " | "
-                    << changetype(info[i].getTypePtr()->getType()) << " | "
-                    << info[i].getTypePtr()->getPrice() << " Baths" <<"|"<< endl;
+                    << changetype(info[i].getTypePtr()->getType()) << " | ";
+                    if(roomleft<10){
+                        cout << info[i].getTypePtr()->getPrice()*1.05 << " Baths" <<"|"<< endl;
+                    }else if(roomleft>=18){
+                        cout << info[i].getTypePtr()->getPrice()*0.95 << " Baths" <<"|"<< endl;
+                    }else{
+                        cout << info[i].getTypePtr()->getPrice() << " Baths" <<"|"<< endl;
+                    }
                 }
             }
     cout << "-------------------------------------------------------" << endl;
