@@ -8,7 +8,6 @@
 #include <regex>
 
 using namespace std;
-// ***dont change data in user.txt because line is important!
 
 // Global Variable Zone
 vector<string> Register_all_phone,Register_all_gmail;
@@ -123,14 +122,11 @@ void Register(){
             }
         }
     }
-
-    //(Add) Add new Account in vector -> sort it (if used vector gmail)
-    //(Add) Want to Login?
 }
 
 bool Register_AddUserData(string name,string phone,string gmail,string password){
     bool result = false;
-    ofstream user_file("user.txt",ios::app);
+    ofstream user_file("user_management/user.txt",ios::app);
     user_file << phone << "\n";
     user_file << gmail << "\n";
     user_file << name << "\n";
@@ -187,45 +183,3 @@ string Register_Make_Lower(string s){
     for(int i=0;i<s.size();i++) result+=tolower(s[i]);
     return result;
 }
-
-//ReadUser for Read user account file(Want to remake).
-// void Register_ReadUser(string USERDATA){
-//     ifstream user_file("user.txt");
-//     string line,user_phone,user_name,user_gmail;
-//     bool user_found = false;
-//     while(getline(user_file,line)){
-//         if(line=="--------------------------------------"){
-//             getline(user_file,user_phone);
-//             getline(user_file,user_gmail);
-//             if(user_phone==USERDATA || user_gmail==USERDATA){
-//                 user_found = true;
-//                 getline(user_file,user_name);
-
-//                 cout<<"Username : "<<user_name<<"\n";
-//                 cout<<"Phone Number : "<<user_phone<<"\n";
-//                 cout<<"Email Account : "<<user_gmail<<"\n";
-                
-//                 int num_booking = 0;
-//                 string room,price;
-//                 getline(user_file,line); // > History
-//                 while(getline(user_file,line)){
-//                     if(line=="--------------------------------------"){
-//                         if(num_booking==0) cout<<"Not Found History.\n";
-//                         break;
-//                     }
-//                     num_booking++;
-//                     getline(user_file,room);
-//                     getline(user_file,price);
-//                     cout<<"Booking "<<num_booking<<"\n";
-//                     cout<<"Type Room : "<<room<<"\n";
-//                     cout<<"Price : "<<price<<"\n";
-//                     cout<<"Time : "<<line<<"\n";
-//                 }
-//                 break;
-//             }
-//         }
-//     }
-//     user_file.close();
-//     if(user_found) cout<<"READ SUCCESS!";
-//     else cout<<"NOT FOUND.";
-// }

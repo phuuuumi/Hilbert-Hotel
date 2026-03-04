@@ -38,7 +38,7 @@ void user::getinfo(vector<string> input){
 }
 
 vector<string> get_userinfo(string input){
-    ifstream user_file("user.txt");
+    ifstream user_file("user_management/user.txt");
     if (!user_file){
     cout << "Cannot open user.txt\n";
     return {"", "", "", "", "0", ""};
@@ -68,8 +68,6 @@ vector<string> get_userinfo(string input){
     // str ใส่ไว้ให้user_found อยู่ตำแหน่งตรงใช้เช็คใน if
     return {"name", "email", "phone", "password", user_found, "history"};
 }
-
-
 
 void login(user &consumer){
     string input;

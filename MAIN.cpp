@@ -24,7 +24,24 @@ int main(void){
         //REGISTER
         if(user_status=="1" || Make_Lower(user_status)=="register"){
             Register();
-            login(customer);
+            while(true){
+                cout << "You want to Login?(Yes/No) : ";
+                string agian;
+                getline(cin,agian);
+                if(Register_Make_Lower(agian)=="yes"){
+                    clearScreen();
+                    login(customer);
+                    break;
+                }
+                else if(Register_Make_Lower(agian)=="no"){
+                    cout << "Thank You Very Much.";
+                    return 0;
+                }
+                else{
+                    cout << "ERROR . . . Your Answer is not Correct\n";
+                    continue;
+                }
+            }
             break;
         }
 
