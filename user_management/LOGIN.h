@@ -167,8 +167,6 @@ void user::AddHistory(){
 
 
     lines[current_history_line_update-1] = current_historytitle_update;
-
-
     lines.insert(lines.begin()+current_line_update-1, current_data_update);
 
 
