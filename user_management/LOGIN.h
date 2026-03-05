@@ -118,14 +118,19 @@ void user::showuserdata(){
     cout << "Name : " << username << "\n";
     cout << "Phone number : " << userphone << "\n";
     cout << "Email : " << useremail << "\n";
-    if(userhistory.size() == 0) cout << "History not found!!\n";
+
+    if(userhistory.size() == 0){
+        cout << "History not found!!\n";
+    }
     else {
-        cout << userhistory.size()-1 << " History\n";
+        cout << userhistory.size() << " History\n";
         cout << "------------------------------------------------\n";
-        for(int i=0; i<userhistory.size()-1; i++){
+
+        for(int i=0; i<userhistory.size(); i++){
 
             string text = "";
-            int temp=1;
+            int temp = 1;
+
             for(char a: userhistory[i]){
                 if(a == ','){
                     if(temp==1) cout<<"Date : "<< text << "\n";
@@ -133,14 +138,17 @@ void user::showuserdata(){
                     if(temp==3) cout<<"Price : "<< text << " Baths\n";
                     text = "";
                     temp++;
-                }else text += a;
+                }
+                else text += a;
             }
+
             cout << "------------------------------------------------\n";
         }
-    }       
+    }
 }
 
 void user::AddHistory(){
+
     string filename = "user_management/user.txt";
     vector<string> lines;
     string line;
@@ -150,27 +158,37 @@ void user::AddHistory(){
         cout << "Cannot read user.txt\n";
         return;
     }
-    while(getline(in_File,line)) lines.push_back(line);
+
+    while(getline(in_File,line)){
+        lines.push_back(line);
+    }
+
     in_File.close();
+
+
+    lines[current_history_line_update-1] = current_historytitle_update;
+
+
+    lines.insert(lines.begin()+current_line_update-1, current_data_update);
+
 
     ofstream out_File(filename);
     if (!out_File){
         cout << "Cannot write user.txt\n";
         return;
     }
-    for(int i=1;i<=lines.size();i++){
-        if(current_history_line_update==i){
-            out_File<<current_historytitle_update<<"\n";
-            continue;
-        }
-        if(current_line_update==i){out_File<<current_data_update<<"\n";}
-        out_File<<lines[i-1]<<"\n";
+
+    for(string &l : lines){
+        out_File << l << "\n";
     }
+
     out_File.close();
-    userhistory.insert(userhistory.begin()+(userhistory.size()-1),current_data_update);
+
+    userhistory.push_back(current_data_update);
+
     current_data_update="";
     current_line_update++;
     current_historytitle_update=to_string((atoi(current_historytitle_update.c_str()))+1)+"  History";
+
     cout<<"Update History Success!\n";
-    return;
 }

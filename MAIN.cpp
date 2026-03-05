@@ -131,7 +131,7 @@ int main(void){
             }
             cout << "-------------------------------------------------------" << endl;
 
-            choose_room(info,roomleft,customer,day_num); //for user to input room.
+            choose_room(info,roomCount,customer,day_num); //for user to input room.
             customer.AddHistory();
             cin.get();
 
