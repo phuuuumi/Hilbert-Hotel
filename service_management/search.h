@@ -1,7 +1,10 @@
-#include <bits/stdc++.h>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <vector>
+#include <map>
+#include <exception>
 
 void checkin(bool&);
 void checkout(bool&);
@@ -445,6 +448,15 @@ string changetype(string type){
 
 }
 
+string changetype_2History(string type){
+    if (type == "STR")  return "Standard Room";
+    if (type == "DR")   return "Deluxe Room";
+    if (type == "TWR")  return "Twin Room";
+    if (type == "DTWR") return "Deluxe Twin Room";
+    if (type == "SUR")  return "Suite Room";
+    return "";
+}
+
 //function to show header of information.
 void headerinformation(){
     cout << " _____________________________________________________" << "\n";
@@ -452,7 +464,9 @@ void headerinformation(){
     cout << "-------------------------------------------------------" << "\n";
 }
 
-void choose_room(){
+string cur_history_data="";
+
+void choose_room(RoomInfo info[],int roomleft,user &customer){
     string room_choose; //choose room system. 
     cout << "Which room do you prefer (please enter room number) :";
     cin >> room_choose;
@@ -460,21 +474,42 @@ void choose_room(){
         cout << "Invalid input . Please enter valid room number." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); 
-        choose_room();
+        choose_room(info,roomleft,customer);
     }else if(room_choose.size() > 3){
         cout << "Invalid input . Please enter valid room number." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); 
-        choose_room();
+        choose_room(info,roomleft,customer);
 
     }else if(stoi(room_choose) < 1 or stoi(room_choose) > 20){
         cout << "Invalid input . Please enter valid room number." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); 
-        choose_room();
+        choose_room(info,roomleft,customer);
     }else{
         ofstream dest("service_management/reservation.txt",ios::app); //record into history.
         if(!dest) cerr << "Error";
+        // Make History
+        // Sample History : 2022/12/06 - 2022/12/07,Normal Room,2000,
+        cur_history_data = to_string(check_in.years) + '/';
+        if(check_in.month<10) cur_history_data+=('0'+to_string(check_in.month));
+        else cur_history_data+=(to_string(check_in.month));
+        cur_history_data+='/';
+        if(check_in.day<10) cur_history_data+=('0'+to_string(check_in.day));
+        else cur_history_data+=(to_string(check_in.day));
+        cur_history_data+=" - ";
+        cur_history_data+=(to_string(check_out.years) + '/');
+        if(check_out.month<10) cur_history_data+=('0'+to_string(check_out.month));
+        else cur_history_data+=(to_string(check_out.month));
+        cur_history_data+='/';
+        if(check_out.day<10) cur_history_data+=('0'+to_string(check_out.day));
+        else cur_history_data+=(to_string(check_out.day));
+        cur_history_data+=(',' + changetype_2History(info[stoi(room_choose)-1].getTypePtr()->getType())+ ',');
+        if(roomleft<10) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*1.05);
+        else if(roomleft>=18) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*0.95);
+        else cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice());
+        cur_history_data += ',';
+        customer.current_data_update = cur_history_data;
         dest << room_choose ; 
         dest << ',' << check_in.day << ',' << check_in.month << ',' << check_in.years;
         dest << ',' << check_out.day << ',' << check_out.month << ',' << check_out.years << endl;

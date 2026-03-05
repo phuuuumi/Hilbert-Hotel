@@ -2,7 +2,6 @@
 #include "user_management/LOGIN.h"
 #include "service_management/search.h"
 
-
 user customer;
 
 void clearScreen();
@@ -34,7 +33,7 @@ int main(void){
                     break;
                 }
                 else if(Register_Make_Lower(agian)=="no"){
-                    cout << "Thank You Very Much.";
+                    cout << "Thank You for visiting.";
                     return 0;
                 }
                 else{
@@ -52,7 +51,7 @@ int main(void){
             break;
         }
         else if(user_status=="3" || Make_Lower(user_status)=="exit"){
-            cout << "Exiting the program." << endl;
+            cout << "Thank You for visiting." << endl;
             return 0;
         }
         else{
@@ -75,6 +74,8 @@ int main(void){
         cout << "3.Exit\n";
         cout << "Please choose your option(1/2/3) : ";
         getline(cin,user_status);
+        RoomInfo info[20];
+        int roomleft;
         if(user_status=="1"){
             clearScreen();
             cout << "------------------------" << endl;
@@ -87,7 +88,7 @@ int main(void){
             checkout(exit);
 
             if (exit) {
-                cout << "Exiting the program." << endl;
+                cout << "Thank You for visiting." << endl;
                 return 0; // Exit the program if user wants to exit
             }
 
@@ -99,9 +100,9 @@ int main(void){
 
             cout << "This is a room that Avaliable" << endl;
 
-            RoomInfo info[20];
+            
             int roomCount = readfile_pasteinfo(info);
-            int roomleft=0;
+            roomleft=0;
             for (int i = 0; i < roomCount; i++){  
                 if (info[i].getTypePtr() != nullptr &&
                     isRoomAvailable(info[i].getNumber(), check_in, check_out)){
@@ -126,28 +127,29 @@ int main(void){
                     }
                 }
             }
-    cout << "-------------------------------------------------------" << endl;
+            cout << "-------------------------------------------------------" << endl;
 
-    choose_room(); //for user to input room.
-    cin.get();
+            choose_room(info,roomleft,customer); //for user to input room.
+            customer.AddHistory();
+            cin.get();
 
-    cout << "1.Go back\n";
-    cout << "2.Exit\n";
-    cout << "Do you want to go back? (1/2) : ";
-    getline(cin,user_status);
-    while(true){
-        if(Make_Lower(user_status) == "1") break;
-        else if(Make_Lower(user_status) == "2") {
-            user_status = "3";
-            cout << "Exiting the program." << endl;
-            return 0;
-        }
-        else {
-            cout << "ERROR . . . Your Answer is not Correct\n";
+            cout << "1.Go back\n";
+            cout << "2.Exit\n";
             cout << "Do you want to go back? (1/2) : ";
             getline(cin,user_status);
-        }
-    }
+            while(true){
+                if(Make_Lower(user_status) == "1") break;
+                else if(Make_Lower(user_status) == "2") {
+                    user_status = "3";
+                    cout << "Thank You for visiting." << endl;
+                    return 0;
+                }
+                else {
+                    cout << "ERROR . . . Your Answer is not Correct\n";
+                    cout << "Do you want to go back? (1/2) : ";
+                    getline(cin,user_status);
+                }
+            }
 
         }
 
@@ -163,7 +165,7 @@ int main(void){
                 if(Make_Lower(user_status) == "1") break;
                 else if(Make_Lower(user_status) == "2") {
                     user_status = "3";
-                    cout << "Exiting the program." << endl;
+                    cout << "Thank You for visiting." << endl;
                     return 0;
                 }
                 else {
@@ -175,7 +177,7 @@ int main(void){
         }
 
         else if(user_status=="3" || Make_Lower(user_status)=="exit"){
-            cout << "Exiting the program." << endl;
+            cout << "Thank You for visiting." << endl;
             return 0;
         }
 

@@ -4,10 +4,15 @@ class user{
         string userphone;
         string userpassword;
     public:
+        int current_history_line_update;
+        int current_line_update;
+        string current_data_update;
+        string current_historytitle_update;
         string username;
         vector<string> userhistory;
         void getinfo(vector<string>);
         void showuserdata();
+        void AddHistory();
 };
 
 void Login_clearScreen();
@@ -21,21 +26,8 @@ void Login_clearScreen(){
     #endif
     return;
 }
-
-void user::getinfo(vector<string> input){
-    username = input[0];
-    useremail = input[1];
-    userphone = input[2];
-    userpassword = input[3];
-
-    string history = "";
-    for(char a: input[5]){
-        if(a == '+'){
-            userhistory.push_back(history);
-            history = "";
-        }else history = history + a;
-    }
-}
+int target_line,history_title_line;
+string new_history_title="";
 
 vector<string> get_userinfo(string input){
     ifstream user_file("user_management/user.txt");
@@ -43,22 +35,28 @@ vector<string> get_userinfo(string input){
     cout << "Cannot open user.txt\n";
     return {"", "", "", "", "0", ""};
     }
+    target_line=0;
     string line, phone, name, email, password, history;
     string user_found = "0";
     while(getline(user_file,line)){
+        target_line++;
         if(line=="--------------------------------------"){
-            getline(user_file,phone);
-            getline(user_file,email);
+            getline(user_file,phone);target_line++;
+            getline(user_file,email);target_line++;
             if(phone == input || email== input){
                 user_found = true;
-                getline(user_file,name);
-                getline(user_file, password);
-                getline(user_file, line);
+                getline(user_file,name);target_line++;
+                getline(user_file, password);target_line++;
+                getline(user_file, line);target_line++;
+                history_title_line = target_line;
                 history = "";
+                new_history_title = to_string((atoi(line.c_str()))+1)+"  History";
+                if(atoi(line.c_str())==0) target_line++;
                 for(int i=0; i<atoi(line.c_str()); i++){
-                    getline(user_file, line);
+                    getline(user_file, line);target_line++;
                     history = history + line + "+";
                 }
+                
                 user_file.close();
                 return {name, email, phone, password, user_found, history};
             }
@@ -67,6 +65,24 @@ vector<string> get_userinfo(string input){
     user_file.close();
     // str ใส่ไว้ให้user_found อยู่ตำแหน่งตรงใช้เช็คใน if
     return {"name", "email", "phone", "password", user_found, "history"};
+}
+
+void user::getinfo(vector<string> input){
+    username = input[0];
+    useremail = input[1];
+    userphone = input[2];
+    userpassword = input[3];
+    current_line_update = target_line;
+    current_history_line_update = history_title_line;
+    current_historytitle_update = new_history_title;
+
+    string history = "";
+    for(char a: input[5]){
+        if(a == '+'){
+            userhistory.push_back(history);
+            history = "";
+        }else history = history + a;
+    }
 }
 
 void login(user &consumer){
@@ -109,13 +125,52 @@ void user::showuserdata(){
         for(int i=0; i<userhistory.size()-1; i++){
 
             string text = "";
+            int temp=1;
             for(char a: userhistory[i]){
                 if(a == ','){
-                    cout << text << "\n";
+                    if(temp==1) cout<<"Date : "<< text << "\n";
+                    if(temp==2) cout<<"Type Room : "<< text << "\n";
+                    if(temp==3) cout<<"Price : "<< text << " Baths\n";
                     text = "";
+                    temp++;
                 }else text += a;
             }
             cout << "------------------------------------------------\n";
         }
     }       
+}
+
+void user::AddHistory(){
+    string filename = "user_management/user.txt";
+    vector<string> lines;
+    string line;
+
+    ifstream in_File(filename);
+    if (!in_File){
+        cout << "Cannot read user.txt\n";
+        return;
+    }
+    while(getline(in_File,line)) lines.push_back(line);
+    in_File.close();
+
+    ofstream out_File(filename);
+    if (!out_File){
+        cout << "Cannot write user.txt\n";
+        return;
+    }
+    for(int i=1;i<=lines.size();i++){
+        if(current_history_line_update==i){
+            out_File<<current_historytitle_update<<"\n";
+            continue;
+        }
+        if(current_line_update==i){out_File<<current_data_update<<"\n";}
+        out_File<<lines[i-1]<<"\n";
+    }
+    out_File.close();
+    userhistory.insert(userhistory.begin()+(userhistory.size()-1),current_data_update);
+    current_data_update="";
+    current_line_update++;
+    current_historytitle_update=to_string((atoi(current_historytitle_update.c_str()))+1)+"  History";
+    cout<<"Update History Success!\n";
+    return;
 }
