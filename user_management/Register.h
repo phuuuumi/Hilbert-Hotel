@@ -127,6 +127,7 @@ void Register(){
 bool Register_AddUserData(string name,string phone,string gmail,string password){
     bool result = false;
     ofstream user_file("user_management/user.txt",ios::app);
+    if (!user_file) return result;
     user_file << phone << "\n";
     user_file << gmail << "\n";
     user_file << name << "\n";
@@ -140,6 +141,7 @@ bool Register_AddUserData(string name,string phone,string gmail,string password)
 
 void Register_CollectAllUserData(){
     ifstream user_file("user_management/user.txt");
+    if (!user_file) return;
     string line,user_phone,user_gmail;
     while(getline(user_file,line)){
         if(line=="--------------------------------------"){
