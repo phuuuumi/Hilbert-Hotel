@@ -11,7 +11,10 @@ int main(void){
     bool exit = false;
     // Welcome_hotel_starter();
 
-    cout << "-Welcome to Hilbert-Hotel-\n";
+    cout << "------------------------" << endl;
+    cout << "WELCOME TO HILBERT HOTEL" << endl; //show in screen
+    cout << "------------------------" << endl << endl;
+
     cout << "1.Register\n";
     cout << "2.Login\n";
     cout << "3.Exit\n";
@@ -78,10 +81,6 @@ int main(void){
         int roomleft;
         if(user_status=="1"){
             clearScreen();
-            cout << "------------------------" << endl;
-            cout << "WELCOME TO HILBERT HOTEL" << endl; //show in screen
-            cout << "------------------------" << endl;
-
             checkin(exit);  /*check in and checkout system for customer*/
             clearScreen();
             cout << "Your check-in date is " << check_in.day << "/" << check_in.month << "/" << check_in.years << endl;
@@ -97,6 +96,9 @@ int main(void){
             cout << "Your check-in date is " << check_in.day << "/" << check_in.month << "/" << check_in.years << endl;
             cout << "Your check-out date is " << check_out.day << "/" << check_out.month << "/" << check_out.years << endl;
             cout << endl;
+
+            int day_num;
+            day_num = countDays(check_out) - countDays(check_in);
 
             cout << "This is a room that Avaliable" << endl;
 
@@ -119,17 +121,17 @@ int main(void){
                     cout <<"|"<< info[i].getNumber() << " | "
                     << changetype(info[i].getTypePtr()->getType()) << " | ";
                     if(roomleft<10){
-                        cout << info[i].getTypePtr()->getPrice()*1.05 << " Baths" <<"|"<< endl;
+                        cout << info[i].getTypePtr()->getPrice()*1.05*day_num << " Baths" <<"|"<< endl;
                     }else if(roomleft>=18){
-                        cout << info[i].getTypePtr()->getPrice()*0.95 << " Baths" <<"|"<< endl;
+                        cout << info[i].getTypePtr()->getPrice()*0.95*day_num << " Baths" <<"|"<< endl;
                     }else{
-                        cout << info[i].getTypePtr()->getPrice() << " Baths" <<"|"<< endl;
+                        cout << info[i].getTypePtr()->getPrice()*day_num << " Baths" <<"|"<< endl;
                     }
                 }
             }
             cout << "-------------------------------------------------------" << endl;
 
-            choose_room(info,roomleft,customer); //for user to input room.
+            choose_room(info,roomleft,customer,day_num); //for user to input room.
             customer.AddHistory();
             cin.get();
 

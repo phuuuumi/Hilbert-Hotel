@@ -88,6 +88,246 @@ bool isBefore(Date a, Date b){
 }
 string changetype(string);
 Date check_in, check_out;
+
+
+ class Room; 
+
+class RoomInfo{
+    private:
+        string room_number;
+        Room* room_type;
+        bool occupied;
+        vector<Reservation> bookings;
+        public:
+            void setRoom(string num, Room* type, bool occ) {
+                room_number = num;
+                room_type = type;
+                occupied = occ;
+            }
+            string getNumber() const {
+                return room_number;
+            }
+
+            Room* getTypePtr() const {
+                return room_type;
+            }
+
+            bool isOccupied() const {
+                return occupied;
+            }
+};
+
+class Room{
+    private:
+        string room_type;
+        int guest;
+        map <string,int> bed;
+        string bathroom;
+        bool living_room;
+        double price;
+    public:
+        void set_data(string ,int ,map <string,int> ,string ,bool ,double );
+        void show() const {
+            cout << room_type << " "
+                 << guest << " "
+                << bathroom << " "
+                << living_room << " "
+                << price << endl;
+        }
+        string getType() const {
+            return room_type;
+        }
+
+        double getPrice() const {
+            return price;
+        }
+
+};
+
+void Room::set_data(string r,int g,map <string,int> b,string bath,bool l,double p){
+    room_type = r;
+    guest = g;
+    bed = b;
+    bathroom = bath;
+    living_room = l;
+    price = p;
+
+}
+
+int readfile_pasteinfo(RoomInfo info[]){
+    fstream  files("service_management/Hotel_Room.txt"); 
+    if (!files) cerr << "Error";
+    static Room rooms[5];
+    int t_count = 0;
+    string line;
+    while (getline(files, line) && t_count < 5) {
+        stringstream ss(line);
+
+        string type, guest_s, bedcount_s, bedtype, bath, living_s, price_s;
+
+        getline(ss, type, ',');
+        getline(ss, guest_s, ',');
+        getline(ss, bedcount_s, ',');
+        getline(ss, bedtype, ',');
+        getline(ss, bath, ',');
+        getline(ss, living_s, ',');
+        getline(ss, price_s, ',');
+
+        int guest = stoi(guest_s);
+        int bedcount = stoi(bedcount_s);
+        bool living = (living_s == "Y");
+        double price = stod(price_s);
+
+        map<string,int> bed;
+        bed[bedtype] = bedcount;
+
+        rooms[t_count].set_data(type, guest, bed, bath, living, price);
+
+        t_count++;
+    }
+
+        map<string, Room*> typeMap;
+        for(int i = 0; i < t_count; i++){
+            typeMap[rooms[i].getType()] = &rooms[i];
+        }
+
+        int r_count = 0;
+        while (r_count < 20 && getline(files, line)) {
+            if(line.empty()) continue;   
+
+            stringstream ss(line);
+
+            string num_s, type, occ_s,num;
+
+            getline(ss, num_s, ',');
+            getline(ss, type, ',');
+            getline(ss, occ_s, ',');
+
+            
+            bool occ = (occ_s == "YES");
+
+            Room* rtype = typeMap[type];
+            info[r_count].setRoom(num_s, rtype, occ);
+            r_count ++;
+            
+        }
+        files.close();
+        return r_count;
+
+}
+
+//function to show room detail.
+string changetype(string type){
+    if (type == "STR")  return "Standard Room (2 person limits)   ";
+    if (type == "DR")   return "Deluxe Room (2 person limits)     ";
+    if (type == "TWR")  return "Twin Room (4 person limits)       ";
+    if (type == "DTWR") return "Deluxe Twin Room (4 person limits)";
+    if (type == "SUR")  return "Suite Room (2 person limits)      ";
+                        return "No Room type                      ";
+
+}
+
+string changetype_2History(string type){
+    if (type == "STR")  return "Standard Room";
+    if (type == "DR")   return "Deluxe Room";
+    if (type == "TWR")  return "Twin Room";
+    if (type == "DTWR") return "Deluxe Twin Room";
+    if (type == "SUR")  return "Suite Room";
+    return "";
+}
+
+//function to show header of information.
+void headerinformation(){
+    cout << " _____________________________________________________" << "\n";
+    cout << "|No. |Type name                           | Price     |" << "\n";
+    cout << "-------------------------------------------------------" << "\n";
+}
+
+string cur_history_data="";
+
+void choose_room(RoomInfo info[],int roomleft,user &customer,int total_days){
+    string room_choose; //choose room system. 
+    cout << "Which room do you prefer (please enter room number) :";
+    cin >> room_choose;
+    if (cin.fail()){
+        cout << "Invalid input . Please enter valid room number." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); 
+        choose_room(info,roomleft,customer,total_days);
+    }else if(room_choose.size() > 3){
+        cout << "Invalid input . Please enter valid room number." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); 
+        choose_room(info,roomleft,customer,total_days);
+
+    }else if(stoi(room_choose) < 1 or stoi(room_choose) > 20){
+        cout << "Invalid input . Please enter valid room number." << endl;
+        cin.clear(); // Clear the error state
+        cin.ignore(1000, '\n'); 
+        choose_room(info,roomleft,customer,total_days);
+    }else{
+        ofstream dest("service_management/reservation.txt",ios::app); //record into history.
+        if(!dest) cerr << "Error";
+        // Make History
+        // Sample History : 2022/12/06 - 2022/12/07,Normal Room,2000,
+        cur_history_data = to_string(check_in.years) + '/';
+        if(check_in.month<10) cur_history_data+=('0'+to_string(check_in.month));
+        else cur_history_data+=(to_string(check_in.month));
+        cur_history_data+='/';
+        if(check_in.day<10) cur_history_data+=('0'+to_string(check_in.day));
+        else cur_history_data+=(to_string(check_in.day));
+        cur_history_data+=" - ";
+        cur_history_data+=(to_string(check_out.years) + '/');
+        if(check_out.month<10) cur_history_data+=('0'+to_string(check_out.month));
+        else cur_history_data+=(to_string(check_out.month));
+        cur_history_data+='/';
+        if(check_out.day<10) cur_history_data+=('0'+to_string(check_out.day));
+        else cur_history_data+=(to_string(check_out.day));
+        cur_history_data+=(',' + changetype_2History(info[stoi(room_choose)-1].getTypePtr()->getType())+ ',');
+        if(roomleft<10) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*1.05*total_days);
+        else if(roomleft>=18) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*0.95*total_days);
+        else cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*total_days);
+        cur_history_data += ',';
+        customer.current_data_update = cur_history_data;
+        dest << room_choose ; 
+        dest << ',' << check_in.day << ',' << check_in.month << ',' << check_in.years;
+        dest << ',' << check_out.day << ',' << check_out.month << ',' << check_out.years << endl;
+        dest.close();
+    }
+    return;
+
+}
+
+bool isLeap(int year){
+    if(year % 400 == 0) return true;
+    if(year % 100 == 0) return false;
+    if(year % 4 == 0) return true;
+    return false;
+}
+
+int daysfromMonth(int month, int year){
+    int days[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+
+    if(month == 2 && isLeap(year))
+        return 29;
+
+    return days[month-1];
+}
+
+int countDays(Date d){
+    int days = d.day;
+
+    for(int i = 0; i < d.years; i++){
+        days += isLeap(i) ? 366 : 365;
+    }
+
+    for(int j = 1; j < d.month; j++){
+        days += daysfromMonth(j, d.years);
+    }
+
+    return days;
+}
+
 //function that manage check-in system.
 void checkin(bool& exit){
     if (exit) {
@@ -310,211 +550,3 @@ void checkout(bool& exit){
         checkout(exit); // Restart the check-out process if input is invalid
     }
  }
-
- class Room; 
-
-class RoomInfo{
-    private:
-        string room_number;
-        Room* room_type;
-        bool occupied;
-        vector<Reservation> bookings;
-        public:
-            void setRoom(string num, Room* type, bool occ) {
-                room_number = num;
-                room_type = type;
-                occupied = occ;
-            }
-            string getNumber() const {
-                return room_number;
-            }
-
-            Room* getTypePtr() const {
-                return room_type;
-            }
-
-            bool isOccupied() const {
-                return occupied;
-            }
-};
-
-class Room{
-    private:
-        string room_type;
-        int guest;
-        map <string,int> bed;
-        string bathroom;
-        bool living_room;
-        double price;
-    public:
-        void set_data(string ,int ,map <string,int> ,string ,bool ,double );
-        void show() const {
-            cout << room_type << " "
-                 << guest << " "
-                << bathroom << " "
-                << living_room << " "
-                << price << endl;
-        }
-        string getType() const {
-            return room_type;
-        }
-
-        double getPrice() const {
-            return price;
-        }
-
-};
-
-void Room::set_data(string r,int g,map <string,int> b,string bath,bool l,double p){
-    room_type = r;
-    guest = g;
-    bed = b;
-    bathroom = bath;
-    living_room = l;
-    price = p;
-
-}
-
-int readfile_pasteinfo(RoomInfo info[]){
-    fstream  files("service_management/Hotel_Room.txt"); 
-    if (!files) cerr << "Error";
-    static Room rooms[5];
-    int t_count = 0;
-    string line;
-    while (getline(files, line) && t_count < 5) {
-        stringstream ss(line);
-
-        string type, guest_s, bedcount_s, bedtype, bath, living_s, price_s;
-
-        getline(ss, type, ',');
-        getline(ss, guest_s, ',');
-        getline(ss, bedcount_s, ',');
-        getline(ss, bedtype, ',');
-        getline(ss, bath, ',');
-        getline(ss, living_s, ',');
-        getline(ss, price_s, ',');
-
-        int guest = stoi(guest_s);
-        int bedcount = stoi(bedcount_s);
-        bool living = (living_s == "Y");
-        double price = stod(price_s);
-
-        map<string,int> bed;
-        bed[bedtype] = bedcount;
-
-        rooms[t_count].set_data(type, guest, bed, bath, living, price);
-
-        t_count++;
-    }
-
-        map<string, Room*> typeMap;
-        for(int i = 0; i < t_count; i++){
-            typeMap[rooms[i].getType()] = &rooms[i];
-        }
-
-        int r_count = 0;
-        while (r_count < 20 && getline(files, line)) {
-            if(line.empty()) continue;   
-
-            stringstream ss(line);
-
-            string num_s, type, occ_s,num;
-
-            getline(ss, num_s, ',');
-            getline(ss, type, ',');
-            getline(ss, occ_s, ',');
-
-            
-            bool occ = (occ_s == "YES");
-
-            Room* rtype = typeMap[type];
-            info[r_count].setRoom(num_s, rtype, occ);
-            r_count ++;
-            
-        }
-        files.close();
-        return r_count;
-
-}
-
-//function to show room detail.
-string changetype(string type){
-    if (type == "STR")  return "Standard Room (2 person limits)   ";
-    if (type == "DR")   return "Deluxe Room (2 person limits)     ";
-    if (type == "TWR")  return "Twin Room (4 person limits)       ";
-    if (type == "DTWR") return "Deluxe Twin Room (4 person limits)";
-    if (type == "SUR")  return "Suite Room (2 person limits)      ";
-                        return "No Room type                      ";
-
-}
-
-string changetype_2History(string type){
-    if (type == "STR")  return "Standard Room";
-    if (type == "DR")   return "Deluxe Room";
-    if (type == "TWR")  return "Twin Room";
-    if (type == "DTWR") return "Deluxe Twin Room";
-    if (type == "SUR")  return "Suite Room";
-    return "";
-}
-
-//function to show header of information.
-void headerinformation(){
-    cout << " _____________________________________________________" << "\n";
-    cout << "|No. |Type name                           | Price     |" << "\n";
-    cout << "-------------------------------------------------------" << "\n";
-}
-
-string cur_history_data="";
-
-void choose_room(RoomInfo info[],int roomleft,user &customer){
-    string room_choose; //choose room system. 
-    cout << "Which room do you prefer (please enter room number) :";
-    cin >> room_choose;
-    if (cin.fail()){
-        cout << "Invalid input . Please enter valid room number." << endl;
-        cin.clear(); // Clear the error state
-        cin.ignore(1000, '\n'); 
-        choose_room(info,roomleft,customer);
-    }else if(room_choose.size() > 3){
-        cout << "Invalid input . Please enter valid room number." << endl;
-        cin.clear(); // Clear the error state
-        cin.ignore(1000, '\n'); 
-        choose_room(info,roomleft,customer);
-
-    }else if(stoi(room_choose) < 1 or stoi(room_choose) > 20){
-        cout << "Invalid input . Please enter valid room number." << endl;
-        cin.clear(); // Clear the error state
-        cin.ignore(1000, '\n'); 
-        choose_room(info,roomleft,customer);
-    }else{
-        ofstream dest("service_management/reservation.txt",ios::app); //record into history.
-        if(!dest) cerr << "Error";
-        // Make History
-        // Sample History : 2022/12/06 - 2022/12/07,Normal Room,2000,
-        cur_history_data = to_string(check_in.years) + '/';
-        if(check_in.month<10) cur_history_data+=('0'+to_string(check_in.month));
-        else cur_history_data+=(to_string(check_in.month));
-        cur_history_data+='/';
-        if(check_in.day<10) cur_history_data+=('0'+to_string(check_in.day));
-        else cur_history_data+=(to_string(check_in.day));
-        cur_history_data+=" - ";
-        cur_history_data+=(to_string(check_out.years) + '/');
-        if(check_out.month<10) cur_history_data+=('0'+to_string(check_out.month));
-        else cur_history_data+=(to_string(check_out.month));
-        cur_history_data+='/';
-        if(check_out.day<10) cur_history_data+=('0'+to_string(check_out.day));
-        else cur_history_data+=(to_string(check_out.day));
-        cur_history_data+=(',' + changetype_2History(info[stoi(room_choose)-1].getTypePtr()->getType())+ ',');
-        if(roomleft<10) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*1.05);
-        else if(roomleft>=18) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*0.95);
-        else cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice());
-        cur_history_data += ',';
-        customer.current_data_update = cur_history_data;
-        dest << room_choose ; 
-        dest << ',' << check_in.day << ',' << check_in.month << ',' << check_in.years;
-        dest << ',' << check_out.day << ',' << check_out.month << ',' << check_out.years << endl;
-        dest.close();
-    }
-    return;
-
-}
