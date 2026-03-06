@@ -346,7 +346,7 @@ void checkin(bool& exit){
     
     try {
         check_in.years = stoi(input); // Convert input to integer for year
-    } catch (const exception&) {
+    } catch (...) {
         cout << "Invalid input for year. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); // Discard invalid input
@@ -370,7 +370,7 @@ void checkin(bool& exit){
         }
     try {
         check_in.month = stoi(input); // Convert input to integer for month
-    } catch (const exception&) {
+    } catch (...) {
         cout << "Invalid input for month. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); // Discard invalid input
@@ -395,7 +395,7 @@ void checkin(bool& exit){
         }
     try {
         check_in.day = stoi(input); // Convert input to integer for day
-    } catch (const exception&) {
+    } catch (...) {
         cout << "Invalid input for day. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); // Discard invalid input
@@ -451,7 +451,7 @@ void checkout(bool& exit){
         }
     try {
         check_out.years = stoi(input); // Convert input to integer for year
-    } catch (const exception&) {
+    } catch (...) {
         cout << "Invalid input for year. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); // Discard invalid input
@@ -475,7 +475,7 @@ void checkout(bool& exit){
     }
     try {
         check_out.month = stoi(input); // Convert input to integer for month
-    } catch (const exception&) {
+    } catch (...) {
         cout << "Invalid input for month. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); // Discard invalid input
@@ -506,7 +506,7 @@ void checkout(bool& exit){
     }
     try {
         check_out.day = stoi(input); // Convert input to integer for day
-    } catch (const exception&) {
+    } catch (...) {
         cout << "Invalid input for day. Please enter a valid number." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); // Discard invalid input
