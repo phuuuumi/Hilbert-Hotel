@@ -1,9 +1,12 @@
 #include "user_management/Register.h"
 #include "user_management/LOGIN.h"
 #include "service_management/search.h"
+#include <chrono>
+#include <thread>
 
 user customer;
 
+void slowPrint(string, int);
 void clearScreen();
 string Make_Lower(string);
 
@@ -11,14 +14,17 @@ int main(void){
     bool exit = false;
     // Welcome_hotel_starter();
 
-    cout << "------------------------" << endl;
-    cout << "WELCOME TO HILBERT HOTEL" << endl; //show in screen
-    cout << "------------------------" << endl << endl;
-
-    cout << "1.Register\n";
-    cout << "2.Login\n";
-    cout << "3.Exit\n";
-    cout << "Please choose your option(1/2/3) : ";
+    slowPrint(" --------------------------------------- \n",100);
+    slowPrint("|\tWELCOME TO HILBERT HOTEL	|\n",100);  //show in screen
+    slowPrint(" --------------------------------------- \n",100); 
+    slowPrint("|\t\t------------         	|\n",100);
+    slowPrint("|\t\t|1.Register|            |\n",100);
+    slowPrint("|\t\t|2.Login   |            |\n",100);
+    slowPrint("|\t\t|3.Exit    |            |\n",100);
+    slowPrint("|\t\t------------         	|\n",100);
+    slowPrint("|                                       |\n",100);
+    slowPrint(" --------------------------------------- \n",100);
+    slowPrint("Please choose your option(1/2/3) : ",100);
     string user_status;
     getline(cin,user_status);
 
@@ -207,4 +213,11 @@ string Make_Lower(string s){
     string result="";
     for(int i=0;i<s.size();i++) result+=tolower(s[i]);
     return result;
+}
+
+void slowPrint(string text, int delay){
+    for(char c : text){
+        cout << c << flush;
+        this_thread::sleep_for(chrono::milliseconds(delay));
+    }
 }
