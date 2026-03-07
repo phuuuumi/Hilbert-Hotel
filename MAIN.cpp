@@ -14,17 +14,17 @@ int main(void){
     bool exit = false;
     // Welcome_hotel_starter();
 
-    slowPrint(" --------------------------------------- \n",100);
-    slowPrint("|\tWELCOME TO HILBERT HOTEL	|\n",100);  //show in screen
-    slowPrint(" --------------------------------------- \n",100); 
-    slowPrint("|\t\t------------         	|\n",100);
-    slowPrint("|\t\t|1.Register|            |\n",100);
-    slowPrint("|\t\t|2.Login   |            |\n",100);
-    slowPrint("|\t\t|3.Exit    |            |\n",100);
-    slowPrint("|\t\t------------         	|\n",100);
-    slowPrint("|                                       |\n",100);
-    slowPrint(" --------------------------------------- \n",100);
-    slowPrint("Please choose your option(1/2/3) : ",100);
+    slowPrint(" --------------------------------------- \n",20);
+    slowPrint("|\tWELCOME TO HILBERT HOTEL	|\n",20);  //show in screen
+    slowPrint(" --------------------------------------- \n",20); 
+    slowPrint("|\t\t ------------         	|\n",20);
+    slowPrint("|\t\t| 1.Register |          |\n",20);
+    slowPrint("|\t\t| 2.Login    |          |\n",20);
+    slowPrint("|\t\t| 3.Exit     |          |\n",20);
+    slowPrint("|\t\t ------------         	|\n",20);
+    slowPrint("|                                       |\n",20);
+    slowPrint(" --------------------------------------- \n",20);
+    slowPrint("Please choose your option(1/2/3) : ",20);
     string user_status;
     getline(cin,user_status);
 
