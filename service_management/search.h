@@ -1,4 +1,4 @@
-#include <iostream>
+#include <iostream> //รวม library ที่จำเป็นต้องใช้
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -6,45 +6,45 @@
 #include <map>
 #include <exception>
 
-void checkin(bool&);
+void checkin(bool&);// function template ของระบบจอง
 void checkout(bool&);
 
 
 using namespace std;
 
-struct Date{
+struct Date{ //เก็บวัน/เดือน/ปี
     int day;
     int month;
     int years;
         
 };
 
-struct Reservation{
+struct Reservation{ //เก็บข้อมูลการจอง (ผูกกับ Date)
     Date check_in;
     Date check_out;
 };
-int daysInMonth(int month, int year) {
+int daysInMonth(int month, int year) { //ตรวจสอบว่าในเดือนของปีๆหนึ่ง(inputเข้ามา)มีกี่วัน 
     if (month == 2) {
 
         if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
-            return 29;
-        return 28;
+            return 29; //ปีอธิกสุรธิน
+        return 28; //เดือนกุมภาปกติ
     }
 
     if (month == 4 || month == 6 || month == 9 || month == 11)
-        return 30;
+        return 30; //เดือนที่ลงท้ายด้วย คม 
 
 
-    return 31;
+    return 31; //เดือนที่ลงท้ายด้วย ยน 
 }
 
-bool isBefore(Date a, Date b){
+bool isBefore(Date a, Date b){ //เช็คว่าวัน/เดือน/ปี a มาก่อน วัน/เดือน/ปี b มั้ย
     if (a.years != b.years) return a.years < b.years;
     if (a.month != b.month) return a.month < b.month;
     return a.day < b.day;
 }
 
-//function to check if that room are avaliable for current customer. 
+//function ที่เช็คว่าห้องว่างสำหรับวันที่ผู้ใช้งานต้องการจองมั้ย
  bool isRoomAvailable(string roomNumber, Date new_in, Date new_out){
 
     fstream file("service_management/reservation.txt");
@@ -53,7 +53,7 @@ bool isBefore(Date a, Date b){
     } //can choose if nothing on files.
 
     string line;
-    while (getline(file, line)){
+    while (getline(file, line)){//อ่านวัน/เดือน/ปีที่จองแล้วจาก reservation.txt
         stringstream ss(line);
 
         string num_s, d1,m1,y1,d2,m2,y2;
@@ -66,40 +66,40 @@ bool isBefore(Date a, Date b){
         getline(ss, m2, ',');
         getline(ss, y2, ',');
 
-        if (num_s != roomNumber) continue; //if not the same room then can check another line.
+        if (num_s != roomNumber) continue; //ถ้าเป็นคนละห้องไม่ต้องเช็ค
         
         if (line.empty()) continue;
 
-        Date old_in  = {stoi(d1), stoi(m1), stoi(y1)}; //the old customer check in and out.
+        Date old_in  = {stoi(d1), stoi(m1), stoi(y1)}; //วัน/เดือน/ปีที่ถูกจองแล้ว
         Date old_out = {stoi(d2), stoi(m2), stoi(y2)};
 
-         bool overlap =
+         bool overlap = //ดูว่าเวลาของการจองเก่าและการจองใหม่ชนกันมั้ย (return true or false)
             isBefore(new_in, old_out) &&
             isBefore(old_in, new_out);
 
-        if (overlap){
+        if (overlap){ //ถ้าทับกันแปลว่าห้องนั้นไม่ว่าง
             file.close();
             return false;
         }
     }
 
-    file.close();
+    file.close();//ไม่ทับกันแปลว่าห้องว่าง
     return true;
 }
 string changetype(string);
-Date check_in, check_out;
+Date check_in, check_out; //ตัวแปรเก็บวันที่จอง
 
 
- class Room; 
+class Room;
 
-class RoomInfo{
+class RoomInfo{ //เก็บรายละเอียดของแต่ละห้อง (001-020) 
     private:
-        string room_number;
-        Room* room_type;
+        string room_number;//เลขห้อง
+        Room* room_type;//ประเภทห้อง (ผูกกับ Room)
         bool occupied;
-        vector<Reservation> bookings;
+        vector<Reservation> bookings;//เก็บการจอง
         public:
-            void setRoom(string num, Room* type, bool occ) {
+            void setRoom(string num, Room* type, bool occ) { //สร้างเป็นตัวแปร ให้เข้าถึงง่าย
                 room_number = num;
                 room_type = type;
                 occupied = occ;
@@ -117,16 +117,16 @@ class RoomInfo{
             }
 };
 
-class Room{
+class Room{//เก็บรายละเอียดประเภทห้อง
     private:
         string room_type;
         int guest;
-        map <string,int> bed;
+        map <string,int> bed;//เก็บข้อมูลว่าประเภทเตียงนี้นอนได้กี่คน
         string bathroom;
         bool living_room;
-        double price;
+        double price;//ราคาของประเภทห้องนั้น(ใช้เยอะ)
     public:
-        void set_data(string ,int ,map <string,int> ,string ,bool ,double );
+        void set_data(string ,int ,map <string,int> ,string ,bool ,double ); //สร้างเป็นตัวแปร ให้เข้าถึงง่าย
         void show() const {
             cout << room_type << " "
                  << guest << " "
@@ -154,13 +154,13 @@ void Room::set_data(string r,int g,map <string,int> b,string bath,bool l,double 
 
 }
 
-int readfile_pasteinfo(RoomInfo info[]){
+int readfile_pasteinfo(RoomInfo info[]){//อ่านไฟล์ database ของรายละเอียดห้อง (เก็บไว้ใน info)
     fstream  files("service_management/Hotel_Room.txt"); 
     if (!files) cerr << "Error";
     static Room rooms[5];
     int t_count = 0;
     string line;
-    while (getline(files, line) && t_count < 5) {
+    while (getline(files, line) && t_count < 5) { //อ่านรายละเอียดประเภทห้อง
         stringstream ss(line);
 
         string type, guest_s, bedcount_s, bedtype, bath, living_s, price_s;
@@ -192,7 +192,7 @@ int readfile_pasteinfo(RoomInfo info[]){
         }
 
         int r_count = 0;
-        while (r_count < 20 && getline(files, line)) {
+        while (r_count < 20 && getline(files, line)) { //อ่านรายละเอียดห้องแต่ละห้อง
             if(line.empty()) continue;   
 
             stringstream ss(line);
@@ -216,7 +216,7 @@ int readfile_pasteinfo(RoomInfo info[]){
 
 }
 
-//function to show room detail.
+//เปลี่ยนตัวย่อเป็นตัวเต็ม
 string changetype(string type){
     if (type == "STR")  return "Standard Room (2 person limits)   ";
     if (type == "DR")   return "Deluxe Room (2 person limits)     ";
@@ -227,6 +227,7 @@ string changetype(string type){
 
 }
 
+//เปลี่ยนตัวย่อเป็นตัวเต็ม
 string changetype_2History(string type){
     if (type == "STR")  return "Standard Room";
     if (type == "DR")   return "Deluxe Room";
@@ -236,7 +237,7 @@ string changetype_2History(string type){
     return "";
 }
 
-//function to show header of information.
+//โชว์หัวตาราง
 void headerinformation(){
     cout << " _____________________________________________________" << "\n";
     cout << "|No. |Type name                           | Price     |" << "\n";
@@ -245,6 +246,7 @@ void headerinformation(){
 
 string cur_history_data="";
 
+//function ให้ผู้ใช้งานเลือกห้อง
 void choose_room(RoomInfo info[],int roomleft,user &customer,int total_days){
     string room_choose; //choose room system. 
     cout << "Which room do you prefer (please enter room number) :";
@@ -298,23 +300,23 @@ void choose_room(RoomInfo info[],int roomleft,user &customer,int total_days){
 
 }
 
-bool isLeap(int year){
+bool isLeap(int year){ //เช็คว่าเป็นปีอธิกสุรธินมั้ย
     if(year % 400 == 0) return true;
     if(year % 100 == 0) return false;
     if(year % 4 == 0) return true;
     return false;
 }
 
-int daysfromMonth(int month, int year){
+int daysfromMonth(int month, int year){ //แปลงเดือนเป็นวัน
     int days[] = {31,28,31,30,31,30,31,31,30,31,30,31};
 
-    if(month == 2 && isLeap(year))
+    if(month == 2 && isLeap(year))//เป็นเดือน 2 ของปีอธิกสุรธิน
         return 29;
 
     return days[month-1];
 }
 
-int countDays(Date d){
+int countDays(Date d){//function นับวันจากวันที่จอง
     int days = d.day;
 
     for(int i = 0; i < d.years; i++){
