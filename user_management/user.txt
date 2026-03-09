@@ -3,26 +3,19 @@
 parawin39228@gmail.com
 Parawin Pitaleemaporn
 680610695
-4  History
-2022/12/06 - 2022/12/07,Deluxe Room,2000.000000,
-2022/12/11 - 2022/12/12,Twin Room,1500.000000,
-2023/12/06 - 2023/12/07,Deluxe Room,2000.000000,
-2027/12/24 - 2027/12/25,Suite Room,7600.000000,
+0 History
 --------------------------------------
 0807695456
 phuuuumi@gmail.com
 Phumiphat thanoi
 1234
-3 History
-2022/12/06 - 2022/12/07,Normal Room,2000.000000,
-2022/12/11 - 2022/12/12,Room,1500.000000,
-2023/12/06 - 2023/12/07,Deluxe Room,2000.000000,
+0 History
 --------------------------------------
 0972357485
 pannkitina@gmail.com
 Pann Kitina
 680610692
-0 History
+0  History
 --------------------------------------
 0987654321
 Xavier@gmail.com
@@ -34,5 +27,11 @@ badmintonNo.1
 chitsanupat2549@gmail.com
 Chitsanupat
 680610667
+0 History
+--------------------------------------
+0815953885
+pann_kitina@gmail.com
+Pann Kitina
+680610692
 0 History
 --------------------------------------
