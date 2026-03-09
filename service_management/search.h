@@ -276,7 +276,7 @@ void choose_room(RoomInfo info[], int roomleft, user &customer, int total_days){
         if(!dest) cerr << "Error";
 
         // Make History
-        // Sample History : 2022/12/06 - 2022/12/07,Normal Room,2000,
+        // Sample History : 06/12/2022 - 07/12/2022,Normal Room,2000,
 
         cur_history_data = "";
 
