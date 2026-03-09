@@ -51,12 +51,11 @@ vector<string> get_userinfo(string input){
                 history_title_line = target_line;
                 history = "";
                 new_history_title = to_string((atoi(line.c_str()))+1)+"  History";
-                if(atoi(line.c_str())==0) target_line++;
-                for(int i=0; i<atoi(line.c_str()); i++){
-                    getline(user_file, line);target_line++;
-                    history = history + line + "+";
+                while(getline(user_file,line)){
+                    if(line == "--------------------------------------") break;
+                    history += line + "+";
+                    target_line++;
                 }
-                
                 user_file.close();
                 return {name, email, phone, password, user_found, history};
             }
@@ -76,6 +75,8 @@ void user::getinfo(vector<string> input){
     current_history_line_update = history_title_line;
     current_historytitle_update = new_history_title;
 
+    userhistory.clear();
+
     string history = "";
     for(char a: input[5]){
         if(a == '+'){
@@ -83,6 +84,7 @@ void user::getinfo(vector<string> input){
             history = "";
         }else history = history + a;
     }
+    if(history != "") userhistory.push_back(history);
 }
 
 void login(user &consumer){
@@ -133,14 +135,17 @@ void user::showuserdata(){
 
             for(char a: userhistory[i]){
                 if(a == ','){
-                    if(temp==1) cout<<"Date : "<< text << "\n";
-                    if(temp==2) cout<<"Type Room : "<< text << "\n";
-                    if(temp==3) cout<<"Price : "<< text << " Baths\n";
-                    text = "";
-                    temp++;
-                }
-                else text += a;
+                if(temp==1) cout<<"Date : "<< text << "\n";
+                else if(temp==2) cout<<"Type Room : "<< text << "\n";
+                else if(temp==3) cout<<"Price : "<< text << " Baths\n";
+
+                text="";
+                temp++;
             }
+            else{
+                text+=a;
+            }
+}
 
             cout << "------------------------------------------------\n";
         }

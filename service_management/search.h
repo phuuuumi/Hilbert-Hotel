@@ -270,19 +270,19 @@ void choose_room(RoomInfo info[],int roomleft,user &customer,int total_days){
         if(!dest) cerr << "Error";
         // Make History
         // Sample History : 2022/12/06 - 2022/12/07,Normal Room,2000,
-        cur_history_data = to_string(check_in.years) + '/';
-        if(check_in.month<10) cur_history_data+=('0'+to_string(check_in.month));
+        cur_history_data = to_string(check_in.day) + "/";
+        if(check_in.month<10) cur_history_data += "0" + to_string(check_in.month);
         else cur_history_data+=(to_string(check_in.month));
         cur_history_data+='/';
-        if(check_in.day<10) cur_history_data+=('0'+to_string(check_in.day));
-        else cur_history_data+=(to_string(check_in.day));
+        if(check_in.years<10) cur_history_data += "0" + to_string(check_in.years);
+        else cur_history_data+=(to_string(check_in.years));
         cur_history_data+=" - ";
-        cur_history_data+=(to_string(check_out.years) + '/');
-        if(check_out.month<10) cur_history_data+=('0'+to_string(check_out.month));
+        cur_history_data += to_string(check_out.day) + "/";
+        if(check_out.month<10) cur_history_data += "0" + to_string(check_in.month);
         else cur_history_data+=(to_string(check_out.month));
         cur_history_data+='/';
-        if(check_out.day<10) cur_history_data+=('0'+to_string(check_out.day));
-        else cur_history_data+=(to_string(check_out.day));
+        if(check_out.years<10) cur_history_data += "0" + to_string(check_in.years);
+        else cur_history_data+=(to_string(check_out.years));
         cur_history_data+=(',' + changetype_2History(info[stoi(room_choose)-1].getTypePtr()->getType())+ ',');
         if(roomleft<10) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*1.05*total_days);
         else if(roomleft>=18) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*0.95*total_days);

@@ -17,11 +17,11 @@ int main(void){
     slowPrint(" --------------------------------------- \n",20);
     slowPrint("|\tWELCOME TO HILBERT HOTEL	|\n",20);  //show in screen
     slowPrint(" --------------------------------------- \n",20); 
-    slowPrint("|\t\t ------------         	|\n",20);
-    slowPrint("|\t\t| 1.Register |          |\n",20);
-    slowPrint("|\t\t| 2.Login    |          |\n",20);
-    slowPrint("|\t\t| 3.Exit     |          |\n",20);
-    slowPrint("|\t\t ------------         	|\n",20);
+    slowPrint("|\t       ------------         	|\n",20);
+    slowPrint("|\t      | 1.Register |            |\n",20);
+    slowPrint("|\t      | 2.Login    |            |\n",20);
+    slowPrint("|\t      | 3.Exit     |            |\n",20);
+    slowPrint("|\t       ------------         	|\n",20);
     slowPrint("|                                       |\n",20);
     slowPrint(" --------------------------------------- \n",20);
     slowPrint("Please choose your option(1/2/3) : ",20);
@@ -78,7 +78,7 @@ int main(void){
     
 
     while(true){
-        cout << "1.Check in and Check out\n";
+        cout << "1.Check in and Check out.\n";
         cout << "2.Show user data and history.\n";
         cout << "3.Exit\n";
         cout << "Please choose your option(1/2/3) : ";
