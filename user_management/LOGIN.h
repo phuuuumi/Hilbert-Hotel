@@ -1,68 +1,98 @@
 class user{
-    private:
-        string useremail;
-        string userphone;
-        string userpassword;
-    public:
-        int current_history_line_update;
-        int current_line_update;
-        string current_data_update;
-        string current_historytitle_update;
-        string username;
-        vector<string> userhistory;
-        void getinfo(vector<string>);
-        void showuserdata();
-        void AddHistory();
+private:
+    string useremail;
+    string userphone;
+    string userpassword;
+
+public:
+    int current_history_line_update;
+    int current_line_update;
+
+    string current_data_update;
+    string current_historytitle_update;
+
+    string username;
+    vector<string> userhistory;
+
+    void getinfo(vector<string>);
+    void showuserdata();
+    void AddHistory();
 };
 
 void Login_clearScreen();
 
 void Login_clearScreen(){
-    #ifdef _WIN32
-        system("cls");
-    #else
-        // Assume POSIX or other non-Windows
-        system("clear");
-    #endif
+#ifdef _WIN32
+    system("cls");
+#else
+    // Assume POSIX or other non-Windows
+    system("clear");
+#endif
     return;
 }
-int target_line,history_title_line;
-string new_history_title="";
+
+int target_line, history_title_line;
+string new_history_title = "";
 
 vector<string> get_userinfo(string input){
     ifstream user_file("user_management/user.txt");
-    if (!user_file){
-    cout << "Cannot open user.txt\n";
-    return {"", "", "", "", "0", ""};
+
+    if(!user_file){
+        cout << "Cannot open user.txt\n";
+        return {"", "", "", "", "0", ""};
     }
-    target_line=0;
+
+    target_line = 0;
+
     string line, phone, name, email, password, history;
     string user_found = "0";
-    while(getline(user_file,line)){
+
+    while(getline(user_file, line)){
         target_line++;
-        if(line=="--------------------------------------"){
-            getline(user_file,phone);target_line++;
-            getline(user_file,email);target_line++;
-            if(phone == input || email== input){
-                user_found = true;
-                getline(user_file,name);target_line++;
-                getline(user_file, password);target_line++;
-                getline(user_file, line);target_line++;
+
+        if(line == "--------------------------------------"){
+            getline(user_file, phone);
+            target_line++;
+
+            getline(user_file, email);
+            target_line++;
+
+            if(phone == input || email == input){
+                user_found = "1";
+
+                getline(user_file, name);
+                target_line++;
+
+                getline(user_file, password);
+                target_line++;
+
+                getline(user_file, line);
+                target_line++;
+
                 history_title_line = target_line;
                 history = "";
-                new_history_title = to_string((atoi(line.c_str()))+1)+"  History";
-                while(getline(user_file,line)){
-                    if(line == "--------------------------------------") break;
-                    history += line + "+";
+
+                new_history_title =
+                    to_string((atoi(line.c_str())) + 1) + " History";
+
+                if(atoi(line.c_str()) == 0)
                     target_line++;
+
+                for(int i = 0; i < atoi(line.c_str()); i++){
+                    getline(user_file, line);
+                    target_line++;
+                    history = history + line + "+";
                 }
+
                 user_file.close();
                 return {name, email, phone, password, user_found, history};
             }
         }
     }
+
     user_file.close();
-    // str ใส่ไว้ให้user_found อยู่ตำแหน่งตรงใช้เช็คใน if
+
+    // str ใส่ไว้ให้ user_found อยู่ตำแหน่งตรงใช้เช็คใน if
     return {"name", "email", "phone", "password", user_found, "history"};
 }
 
@@ -71,46 +101,54 @@ void user::getinfo(vector<string> input){
     useremail = input[1];
     userphone = input[2];
     userpassword = input[3];
+
     current_line_update = target_line;
     current_history_line_update = history_title_line;
     current_historytitle_update = new_history_title;
 
-    userhistory.clear();
-
     string history = "";
-    for(char a: input[5]){
+
+    for(char a : input[5]){
         if(a == '+'){
             userhistory.push_back(history);
             history = "";
-        }else history = history + a;
+        }
+        else{
+            history = history + a;
+        }
     }
-    if(history != "") userhistory.push_back(history);
 }
 
 void login(user &consumer){
     string input;
+
     cout << "Your status is Login.\n";
-    //collect user phone/email
+
+    // collect user phone/email
     while(true){
         cout << "Enter your phone number or email : ";
         getline(cin, input);
-        vector<string> info = get_userinfo(input);
-        if(info[4][0] - '0'){
 
-            //Checking password
+        vector<string> info = get_userinfo(input);
+
+        if(info[4][0] - '0'){
+            // Checking password
             while(true){
                 cout << "Enter Your password: ";
                 getline(cin, input);
+
                 if(info[3] == input){
                     consumer.getinfo(info);
                     break;
-                }else{
+                }
+                else{
                     Login_clearScreen();
                     cout << "Your password is incorrect. Try again\n";
                 }
             }
             break;
         }
+
         Login_clearScreen();
         cout << "Not found pls try again.\n";
     }
@@ -124,28 +162,32 @@ void user::showuserdata(){
     if(userhistory.size() == 0){
         cout << "History not found!!\n";
     }
-    else {
+    else{
         cout << userhistory.size() << " History\n";
         cout << "------------------------------------------------\n";
 
-        for(int i=0; i<userhistory.size(); i++){
-
+        for(int i = 0; i < userhistory.size(); i++){
             string text = "";
             int temp = 1;
 
-            for(char a: userhistory[i]){
+            for(char a : userhistory[i]){
                 if(a == ','){
-                if(temp==1) cout<<"Date : "<< text << "\n";
-                else if(temp==2) cout<<"Type Room : "<< text << "\n";
-                else if(temp==3) cout<<"Price : "<< text << " Baths\n";
+                    if(temp == 1)
+                        cout << "Date : " << text << "\n";
 
-                text="";
-                temp++;
+                    if(temp == 2)
+                        cout << "Type Room : " << text << "\n";
+
+                    if(temp == 3)
+                        cout << "Price : " << text << " Baths\n";
+
+                    text = "";
+                    temp++;
+                }
+                else{
+                    text += a;
+                }
             }
-            else{
-                text+=a;
-            }
-}
 
             cout << "------------------------------------------------\n";
         }
@@ -154,35 +196,56 @@ void user::showuserdata(){
 
 void user::AddHistory(){
     string filename = "user_management/user.txt";
+
     vector<string> lines;
     string line;
 
     ifstream in_File(filename);
-    if (!in_File){
+
+    if(!in_File){
         cout << "Cannot read user.txt\n";
         return;
     }
-    while(getline(in_File,line)) lines.push_back(line);
+
+    while(getline(in_File, line))
+        lines.push_back(line);
+
     in_File.close();
+
     ofstream out_File(filename);
-    if (!out_File){
+
+    if(!out_File){
         cout << "Cannot write user.txt\n";
         return;
     }
-    for(int i=0;i<lines.size();i++){
-        if(current_history_line_update==(i+1)){
-            out_File<<current_historytitle_update<<"\n";
+
+    for(int i = 0; i < lines.size(); i++){
+        if(current_history_line_update == (i + 1)){
+            out_File << current_historytitle_update << "\n";
             continue;
         }
-        if(current_line_update==(i+1)){out_File<<current_data_update<<"\n";}
-        out_File<<lines[i]<<"\n";
+
+        if(current_line_update == (i + 1)){
+            out_File << current_data_update << "\n";
+        }
+
+        out_File << lines[i] << "\n";
     }
-    if(current_line_update==lines.size()+1) out_File<<current_data_update<<"\n";
+
+    if(current_line_update == lines.size() + 1)
+        out_File << current_data_update << "\n";
+
     out_File.close();
+
     userhistory.push_back(current_data_update);
-    current_data_update="";
+    current_data_update = "";
+
     current_line_update++;
-    current_historytitle_update=to_string((atoi(current_historytitle_update.c_str()))+1)+"  History";
-    cout<<"Update History Success!\n";
+
+    current_historytitle_update =
+        to_string((atoi(current_historytitle_update.c_str())) + 1) + " History";
+
+    cout << "Update History Success!\n";
+
     return;
 }

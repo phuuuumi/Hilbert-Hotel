@@ -247,58 +247,103 @@ void headerinformation(){
 string cur_history_data="";
 
 //function ให้ผู้ใช้งานเลือกห้อง
-void choose_room(RoomInfo info[],int roomleft,user &customer,int total_days){
-    string room_choose; //choose room system. 
+void choose_room(RoomInfo info[], int roomleft, user &customer, int total_days){
+    string room_choose; // choose room system
+
     cout << "Which room do you prefer (please enter room number) :";
     cin >> room_choose;
+
     if (cin.fail()){
         cout << "Invalid input . Please enter valid room number." << endl;
-        cin.clear(); // Clear the error state
-        cin.ignore(1000, '\n'); 
-        choose_room(info,roomleft,customer,total_days);
-    }else if(room_choose.size() > 3){
+        cin.clear();
+        cin.ignore(1000, '\n');
+        choose_room(info, roomleft, customer, total_days);
+    }
+    else if(room_choose.size() > 3){
         cout << "Invalid input . Please enter valid room number." << endl;
-        cin.clear(); // Clear the error state
-        cin.ignore(1000, '\n'); 
-        choose_room(info,roomleft,customer,total_days);
-
-    }else if(stoi(room_choose) < 1 or stoi(room_choose) > 20){
+        cin.clear();
+        cin.ignore(1000, '\n');
+        choose_room(info, roomleft, customer, total_days);
+    }
+    else if(stoi(room_choose) < 1 || stoi(room_choose) > 20){
         cout << "Invalid input . Please enter valid room number." << endl;
-        cin.clear(); // Clear the error state
-        cin.ignore(1000, '\n'); 
-        choose_room(info,roomleft,customer,total_days);
-    }else{
-        ofstream dest("service_management/reservation.txt",ios::app); //record into history.
+        cin.clear();
+        cin.ignore(1000, '\n');
+        choose_room(info, roomleft, customer, total_days);
+    }
+    else{
+        ofstream dest("service_management/reservation.txt", ios::app);
         if(!dest) cerr << "Error";
+
         // Make History
         // Sample History : 2022/12/06 - 2022/12/07,Normal Room,2000,
-        cur_history_data = to_string(check_in.day) + "/";
-        if(check_in.month<10) cur_history_data += "0" + to_string(check_in.month);
-        else cur_history_data+=(to_string(check_in.month));
-        cur_history_data+='/';
-        if(check_in.years<10) cur_history_data += "0" + to_string(check_in.years);
-        else cur_history_data+=(to_string(check_in.years));
-        cur_history_data+=" - ";
-        cur_history_data += to_string(check_out.day) + "/";
-        if(check_out.month<10) cur_history_data += "0" + to_string(check_in.month);
-        else cur_history_data+=(to_string(check_out.month));
-        cur_history_data+='/';
-        if(check_out.years<10) cur_history_data += "0" + to_string(check_in.years);
-        else cur_history_data+=(to_string(check_out.years));
-        cur_history_data+=(',' + changetype_2History(info[stoi(room_choose)-1].getTypePtr()->getType())+ ',');
-        if(roomleft<10) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*1.05*total_days);
-        else if(roomleft>=18) cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*0.95*total_days);
-        else cur_history_data+=to_string(info[stoi(room_choose)-1].getTypePtr()->getPrice()*total_days);
+
+        cur_history_data = "";
+
+        // Check-in date
+        if(check_in.day < 10)
+            cur_history_data += "0" + to_string(check_in.day);
+        else
+            cur_history_data += to_string(check_in.day);
+
+        cur_history_data += '/';
+
+        if(check_in.month < 10)
+            cur_history_data += "0" + to_string(check_in.month);
+        else
+            cur_history_data += to_string(check_in.month);
+
+        cur_history_data += '/';
+        cur_history_data += to_string(check_in.years);
+
+        cur_history_data += " - ";
+
+        // Check-out date
+        if(check_out.day < 10)
+            cur_history_data += "0" + to_string(check_out.day);
+        else
+            cur_history_data += to_string(check_out.day);
+
+        cur_history_data += '/';
+
+        if(check_out.month < 10)
+            cur_history_data += "0" + to_string(check_out.month);
+        else
+            cur_history_data += to_string(check_out.month);
+
+        cur_history_data += '/';
+        cur_history_data += to_string(check_out.years);
+        cur_history_data += ',' +
+            changetype_2History(info[stoi(room_choose)-1].getTypePtr()->getType()) + ',';
+
+        if(roomleft < 10)
+            cur_history_data += to_string(
+                info[stoi(room_choose)-1].getTypePtr()->getPrice()*1.05*total_days
+            );
+        else if(roomleft >= 18)
+            cur_history_data += to_string(
+                info[stoi(room_choose)-1].getTypePtr()->getPrice()*0.95*total_days
+            );
+        else
+            cur_history_data += to_string(
+                info[stoi(room_choose)-1].getTypePtr()->getPrice()*total_days
+            );
+
         cur_history_data += ',';
+
         customer.current_data_update = cur_history_data;
-        dest << room_choose ; 
+
+        dest << room_choose;
         dest << ',' << check_in.day << ',' << check_in.month << ',' << check_in.years;
         dest << ',' << check_out.day << ',' << check_out.month << ',' << check_out.years << endl;
+
         dest.close();
     }
-    return;
 
+    return;
 }
+
+
 
 bool isLeap(int year){ //เช็คว่าเป็นปีอธิกสุรธินมั้ย
     if(year % 400 == 0) return true;
