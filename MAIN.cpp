@@ -5,6 +5,7 @@
 #include <thread>
 
 user customer;
+vector<int> overlab_room;
 
 void slowPrint(string, int); //function template ตกแต่ง UI
 void clearScreen();
@@ -117,6 +118,8 @@ int main(void){
                     isRoomAvailable(info[i].getNumber(), check_in, check_out)){ //return true or false
                      roomleft++;
                 }
+                else{
+                overlab_room.push_back(atoi(info[i].getNumber().c_str()));}
             }
 
              headerinformation();//สร้างหัวตารางสำหรับแสดงรายละเอียดห้อง
@@ -138,7 +141,7 @@ int main(void){
             }
             cout << "-------------------------------------------------------" << endl;
 
-            choose_room(info,roomCount,customer,day_num); //function ให้ผู้ใช้งานเลือกห้อง
+            choose_room(info,roomCount,customer,day_num,overlab_room); //function ให้ผู้ใช้งานเลือกห้อง
             customer.AddHistory(); //บันทึกลงในประวัติการจอง
             cin.get();
 

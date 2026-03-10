@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <exception>
+#include <iomanip>
 
 void checkin(bool&);// function template ของระบบจอง
 void checkout(bool&);
@@ -66,7 +67,7 @@ bool isBefore(Date a, Date b){ //เช็คว่าวัน/เดือน/
         getline(ss, m2, ',');
         getline(ss, y2, ',');
 
-        if (num_s != roomNumber) continue; //ถ้าเป็นคนละห้องไม่ต้องเช็ค
+        if (stoi(num_s) != stoi(roomNumber)) continue; //ถ้าเป็นคนละห้องไม่ต้องเช็ค
         
         if (line.empty()) continue;
 
@@ -227,6 +228,12 @@ string changetype(string type){
 
 }
 
+string formatPrice(double price) {
+    ostringstream oss;
+    oss << fixed << setprecision(2) << price;
+    return oss.str();
+}
+
 //เปลี่ยนตัวย่อเป็นตัวเต็ม
 string changetype_2History(string type){
     if (type == "STR")  return "Standard Room";
@@ -247,7 +254,7 @@ void headerinformation(){
 string cur_history_data="";
 
 //function ให้ผู้ใช้งานเลือกห้อง
-void choose_room(RoomInfo info[], int roomleft, user &customer, int total_days){
+void choose_room(RoomInfo info[], int roomleft, user &customer, int total_days,vector<int>& overlab_room){
     string room_choose; // choose room system
 
     cout << "Which room do you prefer (please enter room number) :";
@@ -257,19 +264,23 @@ void choose_room(RoomInfo info[], int roomleft, user &customer, int total_days){
         cout << "Invalid input . Please enter valid room number." << endl;
         cin.clear();
         cin.ignore(1000, '\n');
-        choose_room(info, roomleft, customer, total_days);
+        choose_room(info, roomleft, customer, total_days, overlab_room);
     }
     else if(room_choose.size() > 3){
         cout << "Invalid input . Please enter valid room number." << endl;
         cin.clear();
         cin.ignore(1000, '\n');
-        choose_room(info, roomleft, customer, total_days);
+        choose_room(info, roomleft, customer, total_days, overlab_room);
     }
     else if(stoi(room_choose) < 1 || stoi(room_choose) > 20){
         cout << "Invalid input . Please enter valid room number." << endl;
         cin.clear();
         cin.ignore(1000, '\n');
-        choose_room(info, roomleft, customer, total_days);
+        choose_room(info, roomleft, customer, total_days, overlab_room);
+    }
+    else if (find(overlab_room.begin(), overlab_room.end(), stoi(room_choose)) != overlab_room.end()){
+        cout << "Sorry, this room is not available. Please choose another room." << endl;
+        choose_room(info, roomleft, customer, total_days, overlab_room);
     }
     else{
         ofstream dest("service_management/reservation.txt", ios::app);
@@ -317,15 +328,15 @@ void choose_room(RoomInfo info[], int roomleft, user &customer, int total_days){
             changetype_2History(info[stoi(room_choose)-1].getTypePtr()->getType()) + ',';
 
         if(roomleft < 10)
-            cur_history_data += to_string(
+            cur_history_data += formatPrice(
                 info[stoi(room_choose)-1].getTypePtr()->getPrice()*1.05*total_days
             );
         else if(roomleft >= 18)
-            cur_history_data += to_string(
-                info[stoi(room_choose)-1].getTypePtr()->getPrice()*0.95*total_days
+            cur_history_data += formatPrice(
+                (info[stoi(room_choose)-1].getTypePtr()->getPrice()*0.95*total_days)
             );
         else
-            cur_history_data += to_string(
+            cur_history_data += formatPrice(
                 info[stoi(room_choose)-1].getTypePtr()->getPrice()*total_days
             );
 
@@ -459,24 +470,24 @@ void checkin(bool& exit){
     }
     cout << "You want to check in at "<< check_in.day << "/" << check_in.month << "/" << check_in.years << endl;       
     
-    cout << "Do you want to confirm? (Y/N) :";
+    cout << "Do you want to confirm? (Yes/No) :";
     cin >> input;
     if (cin.fail()) {
-        cout << "Invalid input. Please enter 'Y' for yes or 'N' for no." << endl;
+        cout << "Invalid input. Please enter 'Yes' or 'No'." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); // Discard invalid input
         check_in = {0, 0, 0}; // Reset check-in date to avoid confusion
         checkin(exit); // Restart the check-in process
         return;
     }
-    if (input == "N" || input == "n") {
+    if (input == "No" || input == "no" || input == "NO") {
         check_in = {0, 0, 0}; // Reset check-in date to avoid confusion
         checkin(exit); // Restart the check-in process
-    } else if (input == "Y" || input == "y") {
+    } else if (input == "Yes" || input == "yes" || input == "YES" || input == "YEs" || input == "yEs" || input == "yeS" || input == "yES" || input == "YeS") {
         cout << "Check-in date confirmed: " << check_in.day << "/" << check_in.month << "/" << check_in.years << endl;
         return; // Exit the loop after successful confirmation
     } else {
-        cout << "Invalid input. Please enter 'Y' for yes or 'N' for no." << endl;
+        cout << "Invalid input. Please enter 'Yes' or 'No'." << endl;
         checkin(exit); // Restart the check-in process if input is invalid
     }
  }
@@ -576,24 +587,24 @@ void checkout(bool& exit){
         return;
     }
     cout << "You want to check out at "<< check_out.day << "/" << check_out.month << "/" << check_out.years << endl;
-    cout << "Do you want to confirm? (Y/N) :";
+    cout << "Do you want to confirm? (Yes/No) :";
     cin >> input;
     if (cin.fail()) {
-        cout << "Invalid input. Please enter 'Y' for yes or 'N' for no." << endl;
+        cout << "Invalid input. Please enter 'Yes' or 'No'." << endl;
         cin.clear(); // Clear the error state
         cin.ignore(1000, '\n'); // Discard invalid input
         check_out = {0, 0, 0}; // Reset check-out date to avoid confusion
         checkout(exit); // Restart the check-out process
         return;
     }
-    if (input == "N" || input == "n") {
+    if (input == "No" || input == "no" || input == "NO") {
         check_out = {0, 0, 0}; // Reset check-out date to avoid confusion
         checkout(exit); // Restart the check-out process
-    } else if (input == "Y" || input == "y"){
+    } else if (input == "Yes" || input == "yes" || input == "YES" || input == "YEs" || input == "yEs" || input == "yeS" || input == "yES" || input == "YeS"){
         cout << "Check-out date confirmed: " << check_out.day << "/" << check_out.month << "/" << check_out.years << endl;
         return; // Exit the loop after successful confirmation
     } else {
-        cout << "Invalid input. Please enter 'Y' for yes or 'N' for no." << endl;
+        cout << "Invalid input. Please enter 'Yes' or 'No'." << endl;
         checkout(exit); // Restart the check-out process if input is invalid
     }
  }
