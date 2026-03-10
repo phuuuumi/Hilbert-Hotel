@@ -1,14 +1,3 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <fstream>
-#include <cctype> //tolower isdigit
-#include <cstdlib> //system("clear");
-#include <algorithm> //binary_search and sort
-#include <regex>
-
-using namespace std;
-
 // Global Variable Zone
 vector<string> Register_all_phone,Register_all_gmail;
 

@@ -1,17 +1,9 @@
-#include <iostream> //รวม library ที่จำเป็นต้องใช้
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-#include <map>
-#include <exception>
-#include <iomanip>
-
 void checkin(bool&);// function template ของระบบจอง
 void checkout(bool&);
 
-
-using namespace std;
+time_t t = time(0);
+tm* now = localtime(&t);
+vector<int> todaydate = {now->tm_mday, now->tm_mon + 1 , now->tm_year + 1900}; //เก็บวัน/เดือน/ปีปัจจุบัน
 
 struct Date{ //เก็บวัน/เดือน/ปี
     int day;
@@ -251,7 +243,7 @@ void headerinformation(){
     cout << "-------------------------------------------------------" << "\n";
 }
 
-string cur_history_data="";
+string cur_history_data;
 
 //function ให้ผู้ใช้งานเลือกห้อง
 void choose_room(RoomInfo info[], int roomleft, user &customer, int total_days,vector<int>& overlab_room){
@@ -327,6 +319,8 @@ void choose_room(RoomInfo info[], int roomleft, user &customer, int total_days,v
         cur_history_data += ',' +
             changetype_2History(info[stoi(room_choose)-1].getTypePtr()->getType()) + ',';
 
+
+        // dynamic price
         if(roomleft < 10)
             cur_history_data += formatPrice(
                 info[stoi(room_choose)-1].getTypePtr()->getPrice()*1.05*total_days
@@ -413,12 +407,6 @@ void checkin(bool& exit){
         return;
     }
     input.clear(); // Clear the input string for the next input
-    if (check_in.years < 2026) {
-        cout << "Check-in year cannot be in the past. Please re-enter." << endl;
-        check_in.years = 0; // Reset year to avoid confusion
-        checkin(exit); // Restart the check-in process
-        return;
-    }
     cout << "Month (1-12) : ";
     cin >> input;
     if (input == "Exit") {
@@ -468,8 +456,14 @@ void checkin(bool& exit){
         checkin(exit); // Restart the check-in process
         return;
     }
+    if(check_in.years<todaydate[2] || (check_in.years==todaydate[2]&&check_in.month<todaydate[1]) || (check_in.years==todaydate[2]&&check_in.month==todaydate[1]&&check_in.day<todaydate[0])){
+        cout << "Check-in date cannot be in the past. Please re-enter." << endl;
+        check_in.day = 0; // Reset day to avoid confusion
+        checkin(exit); // Restart the check-in process
+        return;
+    }
+
     cout << "You want to check in at "<< check_in.day << "/" << check_in.month << "/" << check_in.years << endl;       
-    
     cout << "Do you want to confirm? (Yes/No) :";
     cin >> input;
     if (cin.fail()) {

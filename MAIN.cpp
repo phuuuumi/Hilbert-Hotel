@@ -1,8 +1,7 @@
-#include "user_management/Register.h" //เพิ่ม header ทั้งหมด
+#include "Allinclude.h" //เพิ่ม header ทั้งหมด
+#include "user_management/Register.h" 
 #include "user_management/LOGIN.h"
 #include "service_management/search.h"
-#include <chrono>
-#include <thread>
 
 user customer;
 vector<int> overlab_room;
@@ -15,6 +14,8 @@ int main(void){
     bool exit = false;
     // Welcome_hotel_starter();
 
+    clearScreen();
+    cout << "Today: " << todaydate[0] << '/' << todaydate[1] << '/' << todaydate[2] << "\n";
     slowPrint(" --------------------------------------- \n",20);
     slowPrint("|\tWELCOME TO HILBERT HOTEL	|\n",20);  //หน้าจอแสดงผลตอนเริ่มโปรแกรม
     slowPrint(" --------------------------------------- \n",20); 
