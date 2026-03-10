@@ -78,7 +78,8 @@ vector<string> get_userinfo(string input){
                 if(atoi(line.c_str()) == 0)
                     target_line++;
 
-                for(int i = 0; i < atoi(line.c_str()); i++){
+                int size = atoi(line.c_str());
+                for(int i = 0; i < size ; i++){
                     getline(user_file, line);
                     target_line++;
                     history = history + line + "+";
